@@ -1,0 +1,208 @@
+@import "tailwindcss";
+
+@theme {
+  --color-surface-container: #eceef0;
+  --color-outline-variant: #c4c6cc;
+  --color-error-container: #ffdad6;
+  --color-on-tertiary-container: #768599;
+  --color-on-primary: #ffffff;
+  --color-on-secondary-container: #006d76;
+  --color-primary-fixed-dim: #bac8dc;
+  --color-secondary-fixed-dim: #59d8e5;
+  --color-on-tertiary: #ffffff;
+  --color-surface-container-high: #e6e8ea;
+  --color-error: #ba1a1a;
+  --color-on-primary-fixed: #0f1c2c;
+  --color-on-secondary: #ffffff;
+  --color-primary-container: #0f1c2c;
+  --color-on-background: #191c1e;
+  --color-secondary: #006971;
+  --color-on-primary-fixed-variant: #3a4859;
+  --color-on-secondary-fixed: #001f23;
+  --color-tertiary-container: #0d1c2d;
+  --color-on-tertiary-fixed: #0d1c2d;
+  --color-surface-dim: #d8dadc;
+  --color-on-surface-variant: #44474c;
+  --color-primary-fixed: #d6e4f9;
+  --color-surface: #f7f9fb;
+  --color-inverse-surface: #2d3133;
+  --color-surface-bright: #f7f9fb;
+  --color-secondary-fixed: #87f3ff;
+  --color-surface-container-lowest: #ffffff;
+  --color-on-error-container: #93000a;
+  --color-surface-tint: #525f71;
+  --color-inverse-primary: #bac8dc;
+  --color-surface-container-low: #f2f4f6;
+  --color-on-tertiary-fixed-variant: #39485a;
+  --color-tertiary: #000000;
+  --color-on-surface: #191c1e;
+  --color-inverse-on-surface: #eff1f3;
+  --color-surface-variant: #e0e3e5;
+  --color-tertiary-fixed-dim: #b9c8de;
+  --color-on-primary-container: #778598;
+  --color-secondary-container: #76f1ff;
+  --color-background: #f7f9fb;
+  --color-primary: #000000;
+  --color-tertiary-fixed: #d4e4fa;
+  --color-on-secondary-fixed-variant: #004f55;
+  --color-outline: #74777d;
+  --color-surface-container-highest: #e0e3e5;
+  --color-on-error: #ffffff;
+
+  --font-headline-md: 'Bodoni Moda', serif;
+  --font-label-sm: 'Space Grotesk', sans-serif;
+  --font-display-hero-mobile: 'Bodoni Moda', serif;
+  --font-headline-lg: 'Bodoni Moda', serif;
+  --font-body-xl: 'Plus Jakarta Sans', sans-serif;
+  --font-label-caps: 'Space Grotesk', sans-serif;
+  --font-headline-xl: 'Bodoni Moda', serif;
+  --font-body-sm: 'Plus Jakarta Sans', sans-serif;
+  --font-headline-lg-mobile: 'Bodoni Moda', serif;
+  --font-display-hero: 'Bodoni Moda', serif;
+  --font-body-md: 'Plus Jakarta Sans', sans-serif;
+  --font-headline-xl-mobile: 'Bodoni Moda', serif;
+  --font-arabic: 'Noto Sans Arabic', sans-serif;
+}
+
+@layer base {
+  html, body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--color-surface);
+    color: var(--color-on-surface);
+    font-family: var(--font-body-md);
+  }
+  
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Custom scrollbar hiding */
+::-webkit-scrollbar {
+  display: none;
+}
+
+.font-headline-md {
+  font-family: 'Bodoni Moda', serif;
+}
+.font-headline-lg {
+  font-family: 'Bodoni Moda', serif;
+}
+.font-headline-xl {
+  font-family: 'Bodoni Moda', serif;
+}
+.font-display-hero {
+  font-family: 'Bodoni Moda', serif;
+}
+.font-label-sm {
+  font-family: 'Space Grotesk', sans-serif;
+}
+.font-label-caps {
+  font-family: 'Space Grotesk', sans-serif;
+}
+.font-body-md {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+.font-body-sm {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+.font-body-xl {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+/* RTL styles when Arabic is active */
+[dir="rtl"] {
+  font-family: 'Noto Sans Arabic', 'Plus Jakarta Sans', sans-serif;
+}
+[dir="rtl"] .font-headline-md,
+[dir="rtl"] .font-headline-lg,
+[dir="rtl"] .font-headline-xl,
+[dir="rtl"] .font-display-hero {
+  font-family: 'Noto Sans Arabic', 'Bodoni Moda', serif;
+  letter-spacing: normal;
+}
+
+/* Smooth Infinite Vertical Marquee Animations */
+@keyframes marquee-up {
+  0% {
+    transform: translateY(0%);
+  }
+  100% {
+    transform: translateY(-50%);
+  }
+}
+
+@keyframes marquee-down {
+  0% {
+    transform: translateY(-50%);
+  }
+  100% {
+    transform: translateY(0%);
+  }
+}
+
+.animate-marquee-up {
+  animation: marquee-up 32s linear infinite;
+  will-change: transform;
+}
+
+.animate-marquee-down {
+  animation: marquee-down 36s linear infinite;
+  will-change: transform;
+}
+
+.animate-marquee-up-slow {
+  animation: marquee-up 40s linear infinite;
+  will-change: transform;
+}
+
+/* Pause marquee only when explicitly marked paused */
+.group-marquee.is-paused .animate-marquee-up,
+.group-marquee.is-paused .animate-marquee-down,
+.group-marquee.is-paused .animate-marquee-up-slow {
+  animation-play-state: paused !important;
+}
+
+/* Keyframes for sparkling star pop and glow animation */
+@keyframes star-pop {
+  0% {
+    transform: scale(0.65) rotate(-15deg);
+    opacity: 0.5;
+    filter: drop-shadow(0 0 0 rgba(251, 191, 36, 0));
+  }
+  50% {
+    transform: scale(1.4) rotate(10deg);
+    opacity: 1;
+    filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.85));
+  }
+  75% {
+    transform: scale(1.1) rotate(-3deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+    filter: drop-shadow(0 0 4px rgba(251, 191, 36, 0.6));
+  }
+}
+
+@keyframes star-pulse-glow {
+  0%, 100% {
+    transform: scale(1);
+    filter: drop-shadow(0 0 2px rgba(251, 191, 36, 0.5));
+  }
+  50% {
+    transform: scale(1.15);
+    filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.95));
+  }
+}
+
+.animate-star-pop {
+  animation: star-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.animate-star-pulse-glow {
+  animation: star-pulse-glow 1.8s ease-in-out infinite;
+}
+

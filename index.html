@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <script>
+      // Ensure window.fetch is writable and has a setter to avoid "Cannot set property fetch of #<Window> which has only a getter"
+      (function () {
+        try {
+          var _orig = window.fetch ? window.fetch.bind(window) : null;
+          var _fn = _orig;
+          var desc = {
+            get: function () {
+              return _fn;
+            },
+            set: function (newFn) {
+              _fn = newFn;
+            },
+            configurable: true,
+            enumerable: true,
+          };
+          try {
+            Object.defineProperty(window, 'fetch', desc);
+          } catch (e) {}
+          if (typeof Window !== 'undefined' && Window.prototype) {
+            try {
+              Object.defineProperty(Window.prototype, 'fetch', desc);
+            } catch (e) {}
+          }
+          if (typeof globalThis !== 'undefined' && globalThis !== window) {
+            try {
+              Object.defineProperty(globalThis, 'fetch', desc);
+            } catch (e) {}
+          }
+        } catch (err) {}
+      })();
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="/teeth_transparent.png" />
+    <link rel="apple-touch-icon" href="/teeth_transparent.png" />
+    <title>Crystal Dental Center | Aesthetic & Surgical Dentistry | Sharq, Kuwait</title>
+    <meta name="description" content="Crystal Dental Center is a premier aesthetic & surgical dental center in Crystal Tower, Sharq, Kuwait City. Led by Dr. Muneera Abdullatif Al-Mansoor, offering Invisalign, veneers, dental implants, and cosmetic smile design." />
+    <meta name="keywords" content="Crystal Dental Center, dental clinic Kuwait, cosmetic dentistry Kuwait, Dr Muneera Al-Mansoor, Invisalign Kuwait, dental implants Kuwait, teeth whitening, veneers Kuwait, Sharq Kuwait dental, مركز كريستال للأسنان, عيادة أسنان الكويت, دكتورة منيرة المنصور, زراعة أسنان الكويت, ابتسامة هوليوود, تقويم شفاف الكويت" />
+    <meta name="author" content="Dr. Muneera Abdullatif Al-Mansoor | Crystal Dental Center" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="theme-color" content="#008f7a" />
+    <link rel="canonical" href="https://dental.devfazla.com/" />
+    <link rel="alternate" hreflang="en" href="https://dental.devfazla.com/" />
+    <link rel="alternate" hreflang="ar" href="https://dental.devfazla.com/" />
+    <link rel="alternate" hreflang="x-default" href="https://dental.devfazla.com/" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Crystal Dental Center" />
+    <meta property="og:url" content="https://dental.devfazla.com/" />
+    <meta property="og:title" content="Crystal Dental Center | Aesthetic & Surgical Dentistry | Sharq, Kuwait" />
+    <meta property="og:description" content="Premier aesthetic & surgical dental clinic at Crystal Tower, Sharq, Kuwait City. Led by Dr. Muneera Abdullatif Al-Mansoor." />
+    <meta property="og:image" content="https://dental.devfazla.com/hero_dental_chair.jpg" />
+    <meta property="og:image:secure_url" content="https://dental.devfazla.com/hero_dental_chair.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Crystal Dental Center - Suite at Crystal Tower, Kuwait" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:locale:alternate" content="ar_KW" />
+
+    <!-- Twitter Cards -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:domain" content="dental.devfazla.com" />
+    <meta name="twitter:url" content="https://dental.devfazla.com/" />
+    <meta name="twitter:title" content="Crystal Dental Center | Aesthetic & Surgical Dentistry | Sharq, Kuwait" />
+    <meta name="twitter:description" content="Premier aesthetic & surgical dental clinic at Crystal Tower, Sharq, Kuwait City. Led by Dr. Muneera Abdullatif Al-Mansoor." />
+    <meta name="twitter:image" content="https://dental.devfazla.com/hero_dental_chair.jpg" />
+
+    <!-- Schema.org Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Dentist",
+          "@id": "https://dental.devfazla.com/#organization",
+          "name": "Crystal Dental Center",
+          "alternateName": ["مركز كريستال للأسنان", "Crystal Dental Kuwait"],
+          "url": "https://dental.devfazla.com/",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://dental.devfazla.com/teeth_transparent.png",
+            "caption": "Crystal Dental Center Logo"
+          },
+          "image": "https://dental.devfazla.com/hero_dental_chair.jpg",
+          "description": "Premier aesthetic and surgical dental clinic located on the 8th Floor of Crystal Tower, Sharq, Kuwait City, led by Dr. Muneera Abdullatif Al-Mansoor.",
+          "telephone": "+96522970112",
+          "founder": {
+            "@type": "Person",
+            "name": "Dr. Muneera Abdullatif Al-Mansoor",
+            "alternateName": "د. منيرة عبداللطيف المنصور",
+            "jobTitle": "Lead Dental Surgeon & Aesthetic Specialist"
+          },
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Suite 801, 8th Floor, Ahmed Al-Jaber Street, Crystal Tower",
+            "addressLocality": "Sharq",
+            "addressRegion": "Al Asimah Governorate",
+            "postalCode": "15300",
+            "addressCountry": "KW"
+          },
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": 29.3769,
+            "longitude": 47.9781
+          },
+          "hasMap": "https://www.google.com.kw/maps/place/Crystal+Dental+Center/@29.3769198,47.9780788,15z",
+          "openingHoursSpecification": [
+            {
+              "@type": "OpeningHoursSpecification",
+              "dayOfWeek": ["Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday"],
+              "opens": "09:00",
+              "closes": "21:00"
+            }
+          ],
+          "priceRange": "$$$",
+          "currenciesAccepted": "KWD",
+          "paymentAccepted": "Cash, Credit Card, KNET",
+          "sameAs": [
+            "https://instagram.com/crystal.dental.center",
+            "https://www.linkedin.com/company/crystal-dental-center"
+          ],
+          "medicalSpecialty": [
+            "Dentistry",
+            "CosmeticDentistry",
+            "Orthodontics",
+            "Periodontics",
+            "Endodontics",
+            "PediatricDentistry"
+          ]
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://dental.devfazla.com/#website",
+          "url": "https://dental.devfazla.com/",
+          "name": "Crystal Dental Center",
+          "publisher": {
+            "@id": "https://dental.devfazla.com/#organization"
+          },
+          "inLanguage": ["en", "ar"]
+        }
+      ]
+    }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..700;1,6..96,400..700&family=Noto+Sans+Arabic:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+

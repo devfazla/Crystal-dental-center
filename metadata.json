@@ -1,0 +1,6 @@
+{
+  "name": "Crystal Dental Center",
+  "description": "Aesthetic & surgical dental center in Crystal Tower, Sharq, Kuwait, led by Dr. Muneera Abdullatif Al-Mansoor.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
