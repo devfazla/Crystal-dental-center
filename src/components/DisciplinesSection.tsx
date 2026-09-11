@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion } from 'motion/react';
 import { Discipline, Language } from '../types';
 import { DISCIPLINES } from '../data/content';
 
@@ -25,24 +26,54 @@ export const DisciplinesSection: React.FC<DisciplinesSectionProps> = ({
     onSelectDiscipline(item);
   };
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.2
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, x: isArabic ? 20 : -20 },
+    visible: { 
+      opacity: 1, 
+      x: 0,
+      transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] }
+    }
+  };
+
   return (
     <section
       id="disciplines"
       className="relative w-full min-h-screen flex flex-col justify-between px-4 sm:px-6 lg:px-16 pt-12 sm:pt-14 pb-16 sm:pb-20 lg:pb-24 bg-surface"
     >
       {/* Top Meta Bar */}
-      <div className="w-full max-w-[1440px] mx-auto flex items-center justify-center text-center pb-6 sm:pb-8 border-b border-outline-variant/30">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+        className="w-full max-w-[1440px] mx-auto flex items-center justify-center text-center pb-6 sm:pb-8 border-b border-outline-variant/30"
+      >
         <h2 className="font-headline-xl text-2xl min-[360px]:text-3xl sm:text-4xl md:text-5xl lg:text-[68px] lg:leading-[72px] text-on-surface uppercase tracking-tight text-center">
           {isArabic ? 'خدمات وعلاجات الأسنان.' : 'OUR DENTAL SERVICES.'}
         </h2>
-      </div>
+      </motion.div>
 
       {/* Grid: Clean Image on Left + Clean Item Cards on Right */}
       <div className="w-full max-w-[1440px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 my-auto py-6 sm:py-8 items-stretch">
         
         {/* Left: Pure, Clean Image with No Overlaid Elements */}
-        <div
+        <motion.div
           id="discipline-image-display"
+          initial={{ opacity: 0, scale: 0.98 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           className="lg:col-span-7 rounded-2xl sm:rounded-3xl overflow-hidden shadow-sm relative min-h-[250px] sm:min-h-[360px] lg:min-h-[520px] bg-surface-container-lowest border border-outline-variant/30"
         >
           {DISCIPLINES.map((item) => {
@@ -59,16 +90,23 @@ export const DisciplinesSection: React.FC<DisciplinesSectionProps> = ({
               />
             );
           })}
-        </div>
+        </motion.div>
 
         {/* Right: Clean Discipline Items */}
-        <div className="lg:col-span-5 flex flex-col justify-between gap-3 sm:gap-4">
+        <motion.div 
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          className="lg:col-span-5 flex flex-col justify-between gap-3 sm:gap-4"
+        >
           {DISCIPLINES.map((item) => {
             const isActive = activeDiscipline.id === item.id;
 
             return (
-              <div
+              <motion.div
                 key={item.id}
+                variants={itemVariants}
                 id={`discipline-card-${item.id}`}
                 onMouseEnter={() => handleItemHover(item)}
                 onClick={() => {
@@ -124,10 +162,10 @@ export const DisciplinesSection: React.FC<DisciplinesSectionProps> = ({
                     arrow_forward
                   </span>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

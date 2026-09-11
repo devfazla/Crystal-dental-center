@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'motion/react';
 import { Check } from 'lucide-react';
 import { Language } from '../types';
 import skylineSuiteImg from '../assets/images/sanctuary_skyline_suite_1789122138231.jpg';
@@ -109,7 +110,13 @@ export const SanctuarySection: React.FC<SanctuarySectionProps> = ({
     <section id="experience" className="w-full">
       {/* Section Header: OUR CLINIC */}
       <div className="w-full bg-surface border-b border-outline-variant/30 py-12 sm:py-16 px-4 sm:px-6 lg:px-16 text-center">
-        <div className="max-w-4xl mx-auto flex flex-col items-center justify-center">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+          className="max-w-4xl mx-auto flex flex-col items-center justify-center"
+        >
           <h2 className="font-headline-xl text-2xl min-[360px]:text-3xl sm:text-4xl md:text-5xl lg:text-[62px] lg:leading-[66px] text-on-surface uppercase tracking-tight text-center">
             {isArabic ? 'عيادتنا' : 'OUR CLINIC'}
           </h2>
@@ -118,7 +125,7 @@ export const SanctuarySection: React.FC<SanctuarySectionProps> = ({
               ? 'تقع في الدور الثامن من برج كريستال بالشرق — صُممت لتمنحكم أقصى درجات الراحة والهدوء والخصوصية التامة.'
               : 'Located on the 8th floor of Crystal Tower in Sharq — designed for your tranquility, physical ease, and complete peace of mind.'}
           </p>
-        </div>
+        </motion.div>
       </div>
 
       {/* Alternating Full-Screen Sections with Customized App-Theme Backgrounds */}
@@ -133,7 +140,11 @@ export const SanctuarySection: React.FC<SanctuarySectionProps> = ({
           >
             <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-10 sm:gap-14 lg:gap-16 xl:gap-20 items-center">
               {/* IMAGE COLUMN */}
-              <div
+              <motion.div
+                initial={{ opacity: 0, x: isImageLeft ? -30 : 30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
                 className={`w-full ${
                   isImageLeft
                     ? 'lg:order-1'
@@ -149,10 +160,14 @@ export const SanctuarySection: React.FC<SanctuarySectionProps> = ({
                     loading="lazy"
                   />
                 </div>
-              </div>
+              </motion.div>
 
               {/* TEXT COLUMN */}
-              <div
+              <motion.div
+                initial={{ opacity: 0, x: isImageLeft ? 30 : -30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 1, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
                 className={`w-full text-left rtl:text-right ${
                   isImageLeft
                     ? 'lg:order-2'
@@ -194,7 +209,7 @@ export const SanctuarySection: React.FC<SanctuarySectionProps> = ({
                     )
                   )}
                 </div>
-              </div>
+              </motion.div>
             </div>
           </div>
         );

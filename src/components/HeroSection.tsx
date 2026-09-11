@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
+import { motion } from 'motion/react';
 import {
   Play,
   Pause,
@@ -129,7 +130,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ language }) => {
     >
       <div className="w-full max-w-5xl mx-auto flex flex-col items-center justify-center my-auto gap-5 sm:gap-8">
         {/* Monumental, Impactful Headline */}
-        <h1 className="font-display-hero text-2xl min-[360px]:text-3xl sm:text-5xl md:text-6xl lg:text-[68px] lg:leading-[74px] xl:text-[76px] xl:leading-[82px] tracking-tight text-on-surface uppercase text-center px-1">
+        <motion.h1
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+          className="font-display-hero text-2xl min-[360px]:text-3xl sm:text-5xl md:text-6xl lg:text-[68px] lg:leading-[74px] xl:text-[76px] xl:leading-[82px] tracking-tight text-on-surface uppercase text-center px-1"
+        >
           {isArabic ? (
             <>
               اصنع هوية <span className="italic font-normal text-secondary">ابتسامتك.</span>
@@ -139,14 +145,17 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ language }) => {
               BRAND YOUR <span className="italic font-normal text-secondary">SMILE.</span>
             </>
           )}
-        </h1>
+        </motion.h1>
 
         {/* Generous 4:3 Aspect Ratio Video Frame */}
-        <div
+        <motion.div
           ref={containerRef}
           id="hero-video-frame"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
+          initial={{ opacity: 0, scale: 0.96 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
           className="relative aspect-[4/3] w-full max-w-[340px] min-[380px]:max-w-[360px] sm:max-w-[520px] md:max-w-[620px] lg:max-w-[700px] xl:max-w-[760px] rounded-2xl sm:rounded-3xl overflow-hidden shadow-lg bg-white border border-outline-variant/40 group select-none"
         >
           {/* HTML5 Video Element with 4:3 Presentation & Doctor Consultation Thumbnail */}
@@ -318,7 +327,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ language }) => {
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

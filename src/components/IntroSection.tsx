@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'motion/react';
 import { Language } from '../types';
 
 interface IntroSectionProps {
@@ -19,7 +20,13 @@ export const IntroSection: React.FC<IntroSectionProps> = ({
       id="intro"
       className="relative w-full py-16 sm:py-24 md:min-h-[55vh] flex flex-col justify-center items-center px-4 sm:px-8 lg:px-16 bg-surface"
     >
-      <div className="w-full max-w-3xl mx-auto flex flex-col items-center text-center my-auto">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+        className="w-full max-w-3xl mx-auto flex flex-col items-center text-center my-auto"
+      >
         {/* Short Subtitle Message */}
         <p className="font-headline-md text-xl min-[360px]:text-2xl sm:text-3xl lg:text-4xl text-on-surface font-light tracking-tight leading-relaxed max-w-2xl px-2">
           {isArabic
@@ -50,7 +57,7 @@ export const IntroSection: React.FC<IntroSectionProps> = ({
             </span>
           </button>
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 };

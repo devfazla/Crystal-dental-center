@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { motion } from 'motion/react';
 import { ArrowUpRight, Sparkles, Eye } from 'lucide-react';
 import { Language } from '../types';
 import { GALLERY_ITEMS } from '../data/content';
@@ -40,7 +41,13 @@ export const GallerySection: React.FC<GallerySectionProps> = ({
       className="relative w-full min-h-screen flex flex-col justify-between px-4 sm:px-6 lg:px-12 pt-16 pb-20 lg:pb-24 bg-surface border-t border-outline-variant/30 overflow-hidden"
     >
       {/* Top Meta Bar */}
-      <div className="w-full max-w-4xl mx-auto flex flex-col items-center justify-center text-center pb-8 border-b border-outline-variant/30">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+        className="w-full max-w-4xl mx-auto flex flex-col items-center justify-center text-center pb-8 border-b border-outline-variant/30"
+      >
         <h2 className="text-3xl sm:text-4xl lg:text-[52px] lg:leading-[58px] font-bold text-slate-900 tracking-tight text-center">
           {isArabic ? 'معرض صور العيادة' : 'Clinic Gallery'}
         </h2>
@@ -49,10 +56,14 @@ export const GallerySection: React.FC<GallerySectionProps> = ({
             ? 'مرر المؤشر على أي جناح ليتمدد إلى الحجم الكبير (2X) بينما تعود الأجنحة الأخرى إلى الحجم الطبيعي بسلاسة.'
             : 'Hover over any suite to scale it into the 2X featured spotlight while the others smoothly settle into 1X.'}
         </p>
-      </div>
+      </motion.div>
 
       {/* Dynamic 2X / 1X Scaling Flex Mosaic Container */}
-      <div
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.8 }}
         className="w-full max-w-[1440px] mx-auto flex flex-col gap-4 sm:gap-5 my-auto py-8"
         onMouseLeave={() => setHoveredId(null)}
       >
@@ -246,10 +257,16 @@ export const GallerySection: React.FC<GallerySectionProps> = ({
             );
           })}
         </div>
-      </div>
+      </motion.div>
 
       {/* Bottom Action Bar: Centered Entry to Full Dedicated Gallery */}
-      <div className="w-full max-w-4xl mx-auto flex items-center justify-center pt-6 border-t border-outline-variant/30">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+        className="w-full max-w-4xl mx-auto flex items-center justify-center pt-6 border-t border-outline-variant/30"
+      >
         <button
           id="home-open-full-gallery-btn"
           type="button"
@@ -259,7 +276,7 @@ export const GallerySection: React.FC<GallerySectionProps> = ({
           <span>{isArabic ? 'مشاهدة جميع الصور' : 'View All Photos'}</span>
           <ArrowUpRight className="w-4 h-4 rtl:rotate-[-90deg]" />
         </button>
-      </div>
+      </motion.div>
     </section>
   );
 };

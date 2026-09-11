@@ -4,6 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { Header } from './components/Header';
 import { HeroSection } from './components/HeroSection';
 import { IntroSection } from './components/IntroSection';
@@ -122,63 +123,79 @@ export default function App() {
         onBookClick={() => scrollToSection('booking')}
       />
 
-      {currentPage === 'gallery' ? (
-        /* Dedicated Gallery Page */
-        <main className="w-full bg-surface">
-          <GalleryPage
-            language={language}
-            onBackToHome={() => handleNavigate('home')}
-            onBookClick={() => scrollToSection('booking')}
-          />
-        </main>
-      ) : (
-        /* Main Home Experience */
-        <main className="w-full pt-20 bg-surface">
-          {/* Section 1: Hero / The Statement */}
-          <HeroSection language={language} />
+      <AnimatePresence mode="wait">
+        {currentPage === 'gallery' ? (
+          /* Dedicated Gallery Page */
+          <motion.main
+            key="gallery"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            className="w-full bg-surface"
+          >
+            <GalleryPage
+              language={language}
+              onBackToHome={() => handleNavigate('home')}
+              onBookClick={() => scrollToSection('booking')}
+            />
+          </motion.main>
+        ) : (
+          /* Main Home Experience */
+          <motion.main
+            key="home"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            className="w-full pt-20 bg-surface"
+          >
+            {/* Section 1: Hero / The Statement */}
+            <HeroSection language={language} />
 
-          {/* Full-screen Intro Section: Subtitle & Actions */}
-          <IntroSection
-            language={language}
-            onReserveClick={() => scrollToSection('booking')}
-            onExploreClick={() => scrollToSection('disciplines')}
-          />
+            {/* Full-screen Intro Section: Subtitle & Actions */}
+            <IntroSection
+              language={language}
+              onReserveClick={() => scrollToSection('booking')}
+              onExploreClick={() => scrollToSection('disciplines')}
+            />
 
-          {/* Section 2: Disciplines (Precision Craft) */}
-          <DisciplinesSection
-            language={language}
-            selectedDiscipline={selectedDiscipline}
-            onSelectDiscipline={(d) => setSelectedDiscipline(d)}
-            onOpenDetails={(d) => setModalDiscipline(d)}
-            onNextSection={() => scrollToSection('experience')}
-          />
+            {/* Section 2: Disciplines (Precision Craft) */}
+            <DisciplinesSection
+              language={language}
+              selectedDiscipline={selectedDiscipline}
+              onSelectDiscipline={(d) => setSelectedDiscipline(d)}
+              onOpenDetails={(d) => setModalDiscipline(d)}
+              onNextSection={() => scrollToSection('experience')}
+            />
 
-          {/* Section 3: Sanctuary (Comfort. Zero Compromise.) */}
-          <SanctuarySection
-            language={language}
-            onNextSection={() => scrollToSection('gallery')}
-          />
+            {/* Section 3: Sanctuary (Comfort. Zero Compromise.) */}
+            <SanctuarySection
+              language={language}
+              onNextSection={() => scrollToSection('gallery')}
+            />
 
-          {/* Section 4: Architectural Gallery Showcase */}
-          <GallerySection
-            language={language}
-            onOpenGalleryPage={() => handleNavigate('gallery')}
-          />
+            {/* Section 4: Architectural Gallery Showcase */}
+            <GallerySection
+              language={language}
+              onOpenGalleryPage={() => handleNavigate('gallery')}
+            />
 
-          {/* Section 5: Patient Voices & Reviews */}
-          <ReviewsSection language={language} />
+            {/* Section 5: Patient Voices & Reviews */}
+            <ReviewsSection language={language} />
 
-          {/* Section 6: Contact & VIP Concierge Consultation */}
-          <BookingSection
-            language={language}
-            initialDiscipline={bookingDisciplineName}
-            onScrollToTop={() => scrollToSection('hero')}
-          />
+            {/* Section 6: Contact & VIP Concierge Consultation */}
+            <BookingSection
+              language={language}
+              initialDiscipline={bookingDisciplineName}
+              onScrollToTop={() => scrollToSection('hero')}
+            />
 
-          {/* Section 7: Newsletter (Free Subscription of Newsletter) */}
-          <NewsletterSection language={language} />
-        </main>
-      )}
+            {/* Section 7: Newsletter (Free Subscription of Newsletter) */}
+            <NewsletterSection language={language} />
+          </motion.main>
+        )}
+      </AnimatePresence>
 
       {/* Footer */}
       <Footer language={language} onNavigate={handleNavigate} />

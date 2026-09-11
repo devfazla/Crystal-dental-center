@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { motion } from 'motion/react';
 import { Star, Sparkles, CheckCircle2 } from 'lucide-react';
 import { Language, ReviewItem } from '../types';
 import { REVIEWS } from '../data/content';
@@ -233,7 +234,13 @@ export const ReviewsSection: React.FC<ReviewsSectionProps> = ({ language }) => {
       className="relative w-full min-h-screen flex flex-col justify-between px-4 sm:px-6 lg:px-12 pt-16 pb-20 lg:pb-24 bg-surface border-t border-outline-variant/30 overflow-hidden"
     >
       {/* Top Header */}
-      <div className="w-full max-w-4xl mx-auto flex flex-col items-center justify-center text-center pb-4">
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+        className="w-full max-w-4xl mx-auto flex flex-col items-center justify-center text-center pb-4"
+      >
         {/* Headline */}
         <h2 className="text-3xl sm:text-4xl lg:text-[52px] lg:leading-[58px] font-bold text-slate-900 tracking-tight text-center">
           {isArabic ? 'تجارب وآراء عملائنا ومراجعينا' : 'Reviews from our clients'}
@@ -245,10 +252,14 @@ export const ReviewsSection: React.FC<ReviewsSectionProps> = ({ language }) => {
             ? 'شهادات وتجارب حقيقية من مراجعي عيادتنا في برج كريستال'
             : 'Testimonials from our clients around globe'}
         </p>
-      </div>
+      </motion.div>
 
       {/* 3-Column Vertical Carousel Stream */}
-      <div
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true, margin: "-50px" }}
+        transition={{ duration: 1 }}
         className={`relative w-full max-w-6xl mx-auto my-4 group-marquee ${
           isPaused ? 'is-paused' : ''
         }`}
@@ -296,10 +307,16 @@ export const ReviewsSection: React.FC<ReviewsSectionProps> = ({ language }) => {
             {col3Loop.map((item, idx) => renderCard(item, idx, 'c3'))}
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Bottom Stats Container */}
-      <div className="w-full max-w-5xl mx-auto mt-4 sm:mt-6">
+      <motion.div 
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+        className="w-full max-w-5xl mx-auto mt-4 sm:mt-6"
+      >
         <div
           id="reviews-stats-banner"
           className="rounded-[28px] sm:rounded-3xl bg-[#e6f8f5] border border-[#bcece3] py-8 sm:py-10 px-6 sm:px-12 grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 text-center shadow-xs"
@@ -334,7 +351,7 @@ export const ReviewsSection: React.FC<ReviewsSectionProps> = ({ language }) => {
             </p>
           </div>
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 };
