@@ -1,5 +1,21 @@
 @import "tailwindcss";
 
+/* Self-hosted Nunito Sans (variable) - SIL Open Font License, see src/assets/fonts/OFL.txt */
+@font-face {
+  font-family: 'Nunito Sans';
+  font-style: normal;
+  font-weight: 200 1000;
+  font-display: swap;
+  src: url('./assets/fonts/NunitoSans-Variable.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'Nunito Sans';
+  font-style: italic;
+  font-weight: 200 1000;
+  font-display: swap;
+  src: url('./assets/fonts/NunitoSans-Italic-Variable.ttf') format('truetype');
+}
+
 @theme {
   --color-surface-container: #eceef0;
   --color-outline-variant: #c4c6cc;
@@ -49,18 +65,18 @@
   --color-surface-container-highest: #e0e3e5;
   --color-on-error: #ffffff;
 
-  --font-headline-md: 'Bodoni Moda', serif;
-  --font-label-sm: 'Space Grotesk', sans-serif;
-  --font-display-hero-mobile: 'Bodoni Moda', serif;
-  --font-headline-lg: 'Bodoni Moda', serif;
-  --font-body-xl: 'Plus Jakarta Sans', sans-serif;
-  --font-label-caps: 'Space Grotesk', sans-serif;
-  --font-headline-xl: 'Bodoni Moda', serif;
-  --font-body-sm: 'Plus Jakarta Sans', sans-serif;
-  --font-headline-lg-mobile: 'Bodoni Moda', serif;
-  --font-display-hero: 'Bodoni Moda', serif;
-  --font-body-md: 'Plus Jakarta Sans', sans-serif;
-  --font-headline-xl-mobile: 'Bodoni Moda', serif;
+  --font-headline-md: 'Nunito Sans', sans-serif;
+  --font-label-sm: 'Nunito Sans', sans-serif;
+  --font-display-hero-mobile: 'Nunito Sans', sans-serif;
+  --font-headline-lg: 'Nunito Sans', sans-serif;
+  --font-body-xl: 'Nunito Sans', sans-serif;
+  --font-label-caps: 'Nunito Sans', sans-serif;
+  --font-headline-xl: 'Nunito Sans', sans-serif;
+  --font-body-sm: 'Nunito Sans', sans-serif;
+  --font-headline-lg-mobile: 'Nunito Sans', sans-serif;
+  --font-display-hero: 'Nunito Sans', sans-serif;
+  --font-body-md: 'Nunito Sans', sans-serif;
+  --font-headline-xl-mobile: 'Nunito Sans', sans-serif;
   --font-arabic: 'Noto Sans Arabic', sans-serif;
 }
 
@@ -77,6 +93,12 @@
   html {
     scroll-behavior: smooth;
   }
+
+  /* Section targets sit below the fixed 5rem header when scrolled to */
+  section[id],
+  div[id^="sanctuary-"] {
+    scroll-margin-top: 5rem;
+  }
 }
 
 /* Custom scrollbar hiding */
@@ -84,43 +106,78 @@
   display: none;
 }
 
+/* Nav links: center-out underline reveal on hover */
+.nav-link {
+  position: relative;
+}
+.nav-link::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  right: 50%;
+  bottom: -3px;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--color-secondary), var(--color-secondary-container));
+  transition: left 0.28s ease, right 0.28s ease;
+}
+.nav-link:hover::after,
+.nav-link:focus-visible::after,
+.nav-link-active::after {
+  left: 0;
+  right: 0;
+}
+
+/* Section headings: light italic accent word against heavy display type (Nunito Sans variable range) */
+.heading-accent {
+  font-style: italic;
+  font-weight: 300;
+  color: var(--color-secondary);
+  letter-spacing: 0.02em;
+}
+[dir="rtl"] .heading-accent {
+  font-style: normal;
+  font-weight: 800;
+  letter-spacing: normal;
+}
+
 .font-headline-md {
-  font-family: 'Bodoni Moda', serif;
+  font-family: 'Nunito Sans', sans-serif;
 }
 .font-headline-lg {
-  font-family: 'Bodoni Moda', serif;
+  font-family: 'Nunito Sans', sans-serif;
 }
 .font-headline-xl {
-  font-family: 'Bodoni Moda', serif;
+  font-family: 'Nunito Sans', sans-serif;
 }
 .font-display-hero {
-  font-family: 'Bodoni Moda', serif;
+  font-family: 'Nunito Sans', sans-serif;
 }
 .font-label-sm {
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Nunito Sans', sans-serif;
 }
 .font-label-caps {
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Nunito Sans', sans-serif;
 }
 .font-body-md {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Nunito Sans', sans-serif;
 }
 .font-body-sm {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Nunito Sans', sans-serif;
 }
 .font-body-xl {
-  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Nunito Sans', sans-serif;
 }
 
 /* RTL styles when Arabic is active */
 [dir="rtl"] {
-  font-family: 'Noto Sans Arabic', 'Plus Jakarta Sans', sans-serif;
+  font-family: 'Noto Sans Arabic', 'Nunito Sans', sans-serif;
 }
 [dir="rtl"] .font-headline-md,
 [dir="rtl"] .font-headline-lg,
 [dir="rtl"] .font-headline-xl,
 [dir="rtl"] .font-display-hero {
-  font-family: 'Noto Sans Arabic', 'Bodoni Moda', serif;
+  font-family: 'Noto Sans Arabic', 'Nunito Sans', sans-serif;
   letter-spacing: normal;
 }
 

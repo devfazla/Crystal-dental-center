@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import { Language } from '../types';
 import { IMAGES, VIDEOS } from '../data/content';
+import { SafeImage } from './SafeImage';
 
 interface HeroSectionProps {
   language: Language;
@@ -147,7 +148,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ language }) => {
           )}
         </motion.h1>
 
-        {/* Generous 4:3 Aspect Ratio Video Frame */}
+        {/* Landscape 16:9 Video Frame — matches the source clip so nothing crops */}
         <motion.div
           ref={containerRef}
           id="hero-video-frame"
@@ -156,9 +157,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ language }) => {
           initial={{ opacity: 0, scale: 0.96 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-          className="relative aspect-[4/3] w-full max-w-[340px] min-[380px]:max-w-[360px] sm:max-w-[520px] md:max-w-[620px] lg:max-w-[700px] xl:max-w-[760px] rounded-2xl sm:rounded-3xl overflow-hidden shadow-lg bg-white border border-outline-variant/40 group select-none"
+          className="relative aspect-video w-full max-w-[420px] min-[380px]:max-w-[460px] sm:max-w-[600px] md:max-w-[720px] lg:max-w-[840px] xl:max-w-[920px] rounded-2xl sm:rounded-3xl overflow-hidden shadow-lg bg-white border border-outline-variant/40 group select-none"
         >
-          {/* HTML5 Video Element with 4:3 Presentation & Doctor Consultation Thumbnail */}
+          {/* HTML5 Video Element with landscape presentation & consultation thumbnail */}
           <video
             ref={videoRef}
             loop
@@ -174,7 +175,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ language }) => {
             onTimeUpdate={handleTimeUpdate}
             onLoadedMetadata={handleLoadedMetadata}
             onClick={() => togglePlay()}
-            className="w-full h-full object-cover object-center bg-white cursor-pointer"
+            className="w-full h-full object-contain object-center bg-black cursor-pointer"
           >
             <source src={VIDEOS.heroCinematic} type="video/mp4" />
             Your browser does not support the video tag.
@@ -182,7 +183,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ language }) => {
 
           {/* High-Fidelity Initial Thumbnail Poster */}
           {!hasStarted && (
-            <img
+            <SafeImage
               src={IMAGES.heroChair}
               alt="Crystal Dental Center Consultation"
               referrerPolicy="no-referrer"

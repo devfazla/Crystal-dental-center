@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { Check } from 'lucide-react';
 import { Language } from '../types';
+import { SafeImage } from './SafeImage';
 import skylineSuiteImg from '../assets/images/sanctuary_skyline_suite_1789122138231.jpg';
 import ergonomicChairImg from '../assets/images/sanctuary_ergonomic_chair_1789122152133.jpg';
 import gentleCareImg from '../assets/images/sanctuary_gentle_care_1789122167099.jpg';
@@ -21,26 +22,26 @@ export const SanctuarySection: React.FC<SanctuarySectionProps> = ({
       id: 'suites',
       number: '01',
       tagEn: 'PANORAMIC SUITES',
-      tagAr: 'أجنحة هادئة بإطلالة بانورامية',
-      titleEn: 'Private suites above the city skyline.',
-      titleAr: 'غرف علاجية خاصة تعلو أفق المدينة.',
+      tagAr: 'أجنحة بإطلالة بانورامية',
+      titleEn: 'Private suites above the skyline.',
+      titleAr: 'غرف علاجية خاصة فوق أفق المدينة.',
       descEn:
-        'Located on the 8th floor of Crystal Tower in Sharq, our private suites are designed as a quiet sanctuary. Acoustic insulation shields you from street noise, while floor-to-ceiling windows bring in natural light and tranquil skyline views.',
+        'Eight floors above Ahmed Al-Jaber Street, the rooms are insulated from traffic noise. Floor-to-ceiling windows bring in daylight and a long view over the city.',
       descAr:
-        'في الدور الثامن من برج كريستال بالشرق، صُممت غرفنا الخاصة كملاذ هادئ بعيداً عن صخب الشارع. عزل صوتي متطور ونوافذ بانورامية ممتدة تمنحك إضاءة طبيعية وإطلالة تبعث على الاسترخاء والاطمئنان.',
+        'في الدور الثامن فوق شارع أحمد الجابر، الغرف معزولة عن ضجيج الشارع. النوافذ الممتدة من الأرضية إلى السقف تدخل الضوء الطبيعي وتفتح النظر على المدينة.',
       highlightsEn: [
-        'Soundproofed Private Suites',
-        '8th Floor · Crystal Tower',
-        'Kuwait Skyline Views',
+        'Soundproofed rooms',
+        '8th floor, Crystal Tower',
+        'Skyline views',
       ],
       highlightsAr: [
-        'غرف خاصة معزولة تماماً',
-        'الدور الثامن · برج كريستال',
-        'إطلالة بانورامية على أفق الكويت',
+        'غرف معزولة الصوت',
+        'الدور الثامن، برج كريستال',
+        'إطلالة على الأفق',
       ],
       image: skylineSuiteImg,
-      altEn: 'Private luxury dental suite on the 8th floor of Crystal Tower overlooking Kuwait City skyline',
-      altAr: 'غرفة علاجية خاصة بإطلالة بانورامية هادئة على مدينة الكويت في برج كريستال',
+      altEn: 'Private dental suite on the 8th floor of Crystal Tower overlooking the Kuwait City skyline',
+      altAr: 'غرفة علاجية خاصة في الدور الثامن ببرج كريستال بإطلالة على مدينة الكويت',
       layout: 'image-left', // image [left] texts [right]
       bgClassName: 'bg-[#f1f7f6]', // Fresh subtle mint/teal wash fitting app theme
       badgeAccent: 'text-[#008f7a]',
@@ -51,25 +52,25 @@ export const SanctuarySection: React.FC<SanctuarySectionProps> = ({
       number: '02',
       tagEn: 'ERGONOMIC COMFORT',
       tagAr: 'راحة جسدية متكاملة',
-      titleEn: 'Contoured chairs engineered for absolute ease.',
-      titleAr: 'كراسي علاجية مصممة لراحتك التامة.',
+      titleEn: 'Chairs built for long visits.',
+      titleAr: 'كراسي تُعدّ للجلسات الطويلة.',
       descEn:
-        'Physical tension shouldn’t be part of dental visits. Our treatment chairs are crafted with bespoke memory foam contours and tailored cervical neck support, relieving pressure points so your entire body remains relaxed from start to finish.',
+        'Nothing about the chair should leave your body tense. Memory-foam contours and cervical support take the pressure off your neck and back while the work gets done.',
       descAr:
-        'لا مكان للإجهاد البدني أثناء العلاج. كراسينا الطبية مجهزة بدعامات ميموري فوم مخصصة تسند الرقبة والظهر وتخفف نقاط الضغط، لتشعر براحة جسدية تامة طوال مدة زيارتك.',
+        'لا شيء في الكرسي يجب أن يترك جسدك متوتراً. حواف ميموري فوم ودعامات عنقية تسحب الضغط عن رقبتك وظهرك بينما يجري العمل.',
       highlightsEn: [
-        'Bespoke Memory Foam Contours',
-        'Cervical Neck & Back Support',
-        'Calming Ambient Illumination',
+        'Memory-foam contours',
+        'Neck and back support',
+        'Soft ambient lighting',
       ],
       highlightsAr: [
-        'دعامات ميموري فوم فائقة الراحة',
-        'إسناد مريح للرقبة والظهر',
-        'إضاءة هادئة ومريحة للعين',
+        'حواف ميموري فوم',
+        'دعم الرقبة والظهر',
+        'إضاءة هادئة',
       ],
       image: ergonomicChairImg,
-      altEn: 'Bespoke ergonomic contoured dental chair with cervical memory foam support',
-      altAr: 'كرسي أسنان طبي فائق الراحة بتصميم إرجونومي يدعم راحة الظهر والرقبة',
+      altEn: 'Ergonomic dental chair with memory foam cervical support',
+      altAr: 'كرسي أسنان إرجونومي بدعامات ميموري فوم للرقبة والظهر',
       layout: 'text-left', // texts [left] image [right]
       bgClassName: 'bg-[#faf6f0]', // Soft warm cashmere/sand clinic sanctuary wash
       badgeAccent: 'text-[#008f7a]',
@@ -78,27 +79,27 @@ export const SanctuarySection: React.FC<SanctuarySectionProps> = ({
     {
       id: 'care',
       number: '03',
-      tagEn: 'GENTLE PATIENT CARE',
-      tagAr: 'رعاية إنسانية مطمئنة',
-      titleEn: 'Paced entirely to your comfort, with complete transparency.',
-      titleAr: 'رعاية هادئة تسير وفق راحتك وبشفافية تامة.',
+      tagEn: 'GENTLE CARE',
+      tagAr: 'رعاية لطيفة',
+      titleEn: 'At your pace, with nothing hidden.',
+      titleAr: 'على سرعتك، وبدون شيء مخفي.',
       descEn:
-        'We take the time to listen, explain every step with high-definition digital imaging, and answer every question before we begin. No rushing, no pressure — just gentle, compassionate care that eliminates dental anxiety.',
+        'We show you the images, explain the step before it happens, and answer questions before we begin. There’s no rushing, no pressure to decide on the spot.',
       descAr:
-        'نمنحك كامل الوقت للاستماع والإجابة عن كل استفسار بشفافية وباستخدام أحدث تقنيات التصوير الرقمي قبل البدء. لا استعجال ولا ضغوط — فقط رعاية طبية هادئة تزيل أي رهبة وتمنحك راحة البال والثقة.',
+        'نريك الصور، ونشرح كل خطوة قبل أن تحدث، ونجيب عن أسئلتك قبل أن نبدأ. لا استعجال، ولا ضغط لتقرر في اللحظة.',
       highlightsEn: [
-        'Unrushed Consultations',
-        'Clear Digital Imaging Explanations',
-        'Gentle, Compassionate Team',
+        'Consultations without a clock on them',
+        'Digital images, explained',
+        'A team that takes it slowly',
       ],
       highlightsAr: [
-        'استشارات هادئة دون أي استعجال',
-        'شرح شفاف بالتصوير الرقمي',
-        'فريق طبي ودود ومطمئن',
+        'استشارات بلا ساعة تعدّ',
+        'صور رقمية مشروحة',
+        'فريق يأخذ وقته',
       ],
       image: gentleCareImg,
-      altEn: 'Gentle and reassuring consultation with patient in calm luxury clinic suite',
-      altAr: 'استشارة طبية هادئة ومطمئنة في عيادة كريستال',
+      altEn: 'Calm consultation at Crystal Dental Center',
+      altAr: 'استشارة هادئة في مركز كريستال للأسنان',
       layout: 'image-left', // image [left] texts [right]
       bgClassName: 'bg-[#eef4f8]', // Serene pale sky/cool slate medical wash
       badgeAccent: 'text-[#008f7a]',
@@ -117,13 +118,17 @@ export const SanctuarySection: React.FC<SanctuarySectionProps> = ({
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           className="max-w-4xl mx-auto flex flex-col items-center justify-center"
         >
-          <h2 className="font-headline-xl text-2xl min-[360px]:text-3xl sm:text-4xl md:text-5xl lg:text-[62px] lg:leading-[66px] text-on-surface uppercase tracking-tight text-center">
-            {isArabic ? 'عيادتنا' : 'OUR CLINIC'}
+          <h2 className="font-headline-xl text-2xl min-[360px]:text-3xl sm:text-4xl md:text-5xl lg:text-[62px] lg:leading-[66px] text-on-surface uppercase tracking-tight text-center font-extrabold">
+            {isArabic ? (
+              <span className="heading-accent">عيادتنا</span>
+            ) : (
+              <>Our <span className="heading-accent">Clinic.</span></>
+            )}
           </h2>
           <p className="mt-3 sm:mt-4 text-slate-600 text-sm sm:text-base lg:text-lg font-normal max-w-2xl text-center leading-relaxed">
             {isArabic
-              ? 'تقع في الدور الثامن من برج كريستال بالشرق — صُممت لتمنحكم أقصى درجات الراحة والهدوء والخصوصية التامة.'
-              : 'Located on the 8th floor of Crystal Tower in Sharq — designed for your tranquility, physical ease, and complete peace of mind.'}
+              ? 'في الدور الثامن من برج كريستال بالشرق؛ مهيأة للهدوء والضوء والخصوصية.'
+              : 'On the 8th floor of Crystal Tower in Sharq, laid out around quiet, light and privacy.'}
           </p>
         </motion.div>
       </div>
@@ -152,7 +157,7 @@ export const SanctuarySection: React.FC<SanctuarySectionProps> = ({
                 }`}
               >
                 <div className="w-full aspect-[4/3] sm:aspect-[16/11] lg:aspect-[4/3] rounded-3xl overflow-hidden bg-white/70 border border-slate-200/80 shadow-md relative group">
-                  <img
+                  <SafeImage
                     src={card.image}
                     alt={isArabic ? card.altAr : card.altEn}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"

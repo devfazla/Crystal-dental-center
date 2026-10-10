@@ -1,20 +1,21 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, X, ChevronLeft, ChevronRight, Calendar, Sparkles } from 'lucide-react';
 import { Language, GalleryItem } from '../types';
 import { GALLERY_ITEMS } from '../data/content';
+import { SafeImage } from './SafeImage';
+import { useSectionNav } from '../hooks/useSectionNav';
 
 interface GalleryPageProps {
   language: Language;
-  onBackToHome: () => void;
-  onBookClick: () => void;
 }
 
 export const GalleryPage: React.FC<GalleryPageProps> = ({
   language,
-  onBackToHome,
-  onBookClick,
 }) => {
   const isArabic = language === 'ar';
+  const navigate = useNavigate();
+  const scrollToSection = useSectionNav();
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [lightboxItem, setLightboxItem] = useState<GalleryItem | null>(null);
 
@@ -88,7 +89,7 @@ export const GalleryPage: React.FC<GalleryPageProps> = ({
           <button
             id="gallery-back-btn"
             type="button"
-            onClick={onBackToHome}
+            onClick={() => navigate('/')}
             className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-on-surface hover:text-secondary font-medium transition-colors cursor-pointer group"
           >
             <ArrowLeft className="w-4 h-4 rtl:rotate-180 group-hover:-translate-x-1 rtl:group-hover:translate-x-1 transition-transform" />
@@ -102,14 +103,18 @@ export const GalleryPage: React.FC<GalleryPageProps> = ({
 
         {/* Page Header */}
         <div className="flex flex-col items-center justify-center text-center max-w-3xl mx-auto pt-4 pb-2">
-          <h1 className="font-headline-xl text-3xl sm:text-5xl lg:text-6xl text-on-surface uppercase tracking-tight">
-            {isArabic ? 'غرف ومرافق العيادة.' : 'OUR CLINIC & ROOMS.'}
+          <h1 className="font-headline-xl text-3xl sm:text-5xl lg:text-6xl text-on-surface uppercase tracking-tight font-extrabold">
+            {isArabic ? (
+              <>غرف <span className="heading-accent">ومرافق العيادة</span>.</>
+            ) : (
+              <>Our Clinic <span className="heading-accent">& Rooms.</span></>
+            )}
           </h1>
 
           <p className="mt-4 text-on-surface-variant text-sm sm:text-base leading-relaxed max-w-2xl">
             {isArabic
-              ? 'استكشف غرف العلاج الحديثة والأجهزة المتطورة وأماكن الراحة المصممة لتوفير أعلى درجات الطمأنينة.'
-              : 'Explore our modern treatment rooms, advanced equipment, and comfortable spaces designed for your peace of mind.'}
+              ? 'غرف العلاج والأدوات، والأيدي التي تستخدمها.'
+              : 'Treatment rooms, equipment, and the people who use them.'}
           </p>
         </div>
 
@@ -145,7 +150,7 @@ export const GalleryPage: React.FC<GalleryPageProps> = ({
             >
               {/* Image Frame */}
               <div className="relative aspect-[4/3] w-full overflow-hidden bg-surface-container-low">
-                <img
+                <SafeImage
                   src={item.image}
                   alt={isArabic ? item.titleAr : item.titleEn}
                   loading="lazy"
@@ -194,7 +199,7 @@ export const GalleryPage: React.FC<GalleryPageProps> = ({
           <button
             id="gallery-cta-reserve-btn"
             type="button"
-            onClick={onBookClick}
+            onClick={() => scrollToSection('booking')}
             className="px-8 py-3.5 rounded-full bg-on-surface text-surface hover:bg-secondary transition-colors text-xs uppercase tracking-widest font-medium shrink-0 cursor-pointer shadow-sm active:scale-95 flex items-center gap-2"
           >
             <Calendar className="w-4 h-4" />
@@ -250,7 +255,7 @@ export const GalleryPage: React.FC<GalleryPageProps> = ({
             className="relative max-w-5xl w-full max-h-[90vh] flex flex-col items-center justify-center"
           >
             <div className="relative rounded-2xl overflow-hidden max-h-[72vh] bg-black/40 border border-white/10 shadow-2xl">
-              <img
+              <SafeImage
                 src={lightboxItem.image}
                 alt={isArabic ? lightboxItem.titleAr : lightboxItem.titleEn}
                 className="w-auto h-auto max-h-[72vh] max-w-full object-contain"

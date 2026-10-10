@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { Discipline, Language } from '../types';
+import { SafeImage } from './SafeImage';
 
 interface DisciplineModalProps {
   discipline: Discipline | null;
@@ -62,7 +63,7 @@ export const DisciplineModal: React.FC<DisciplineModalProps> = ({
 
         {/* Clean Photograph */}
         <div className="relative w-full h-48 sm:h-56 rounded-2xl overflow-hidden mt-3 mb-5 bg-surface-container-lowest border border-outline-variant/30">
-          <img
+          <SafeImage
             src={discipline.image}
             alt={isArabic ? discipline.titleAr : discipline.titleEn}
             className="w-full h-full object-cover"

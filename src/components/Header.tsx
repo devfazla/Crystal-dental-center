@@ -1,25 +1,26 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X, Sparkles, Stethoscope, Image as ImageIcon, Star, MapPin, Phone, ArrowRight } from 'lucide-react';
 import { Language } from '../types';
 import { CLINIC_INFO } from '../data/content';
+import { useSectionNav } from '../hooks/useSectionNav';
+import { SafeImage } from './SafeImage';
 import teethLogo from '../assets/images/teeth_transparent.png';
 
 interface HeaderProps {
   language: Language;
   onToggleLanguage: () => void;
-  onBookClick: () => void;
-  currentPage?: 'home' | 'gallery';
-  onNavigate?: (page: 'home' | 'gallery', sectionId?: string) => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
   language,
   onToggleLanguage,
-  onBookClick,
-  currentPage = 'home',
-  onNavigate,
 }) => {
   const isArabic = language === 'ar';
+  const navigate = useNavigate();
+  const location = useLocation();
+  const scrollToSection = useSectionNav();
+  const onGallery = location.pathname === '/gallery';
   const [scrollProgress, setScrollProgress] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -40,23 +41,17 @@ export const Header: React.FC<HeaderProps> = ({
 
   const handleNavClick = (sectionId: string) => {
     setMobileMenuOpen(false);
-    if (onNavigate) {
-      onNavigate('home', sectionId);
-    } else {
-      const el = document.getElementById(sectionId);
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth' });
-      }
-    }
+    scrollToSection(sectionId);
   };
 
   const handleGalleryClick = () => {
     setMobileMenuOpen(false);
-    if (currentPage === 'home') {
-      handleNavClick('gallery');
-    } else if (onNavigate) {
-      onNavigate('gallery');
-    }
+    navigate('/gallery');
+  };
+
+  const handleBookClick = () => {
+    setMobileMenuOpen(false);
+    scrollToSection('booking');
   };
 
   return (
@@ -67,7 +62,7 @@ export const Header: React.FC<HeaderProps> = ({
       <div className="h-20 max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12 flex items-center justify-between gap-3 sm:gap-6 lg:gap-8">
         {/* Brand Logo */}
         <a
-          href="#hero"
+          href="#/"
           onClick={(e) => {
             e.preventDefault();
             handleNavClick('hero');
@@ -76,7 +71,7 @@ export const Header: React.FC<HeaderProps> = ({
           data-path="home"
           id="nav-logo"
         >
-          <img
+          <SafeImage
             src={teethLogo}
             alt={isArabic ? 'شعار عيادة كريستال' : 'Crystal Dental Logo'}
             className="w-10 h-10 sm:w-11 sm:h-11 object-contain shrink-0 group-hover:scale-105 transition-transform duration-300"
@@ -97,7 +92,7 @@ export const Header: React.FC<HeaderProps> = ({
           <button
             type="button"
             onClick={() => handleNavClick('disciplines')}
-            className="text-on-surface-variant hover:text-on-surface font-label-caps text-xs xl:text-label-caps uppercase tracking-wider xl:tracking-widest transition-colors cursor-pointer py-1 whitespace-nowrap"
+            className="nav-link text-on-surface-variant hover:text-on-surface font-label-caps text-xs xl:text-label-caps uppercase tracking-wider xl:tracking-widest transition-colors cursor-pointer py-1 whitespace-nowrap"
             data-path="disciplines"
             id="nav-disciplines"
           >
@@ -106,7 +101,7 @@ export const Header: React.FC<HeaderProps> = ({
           <button
             type="button"
             onClick={() => handleNavClick('experience')}
-            className="text-on-surface-variant hover:text-on-surface font-label-caps text-xs xl:text-label-caps uppercase tracking-wider xl:tracking-widest transition-colors cursor-pointer py-1 whitespace-nowrap"
+            className="nav-link text-on-surface-variant hover:text-on-surface font-label-caps text-xs xl:text-label-caps uppercase tracking-wider xl:tracking-widest transition-colors cursor-pointer py-1 whitespace-nowrap"
             data-path="sanctuary"
             id="nav-sanctuary"
           >
@@ -115,9 +110,9 @@ export const Header: React.FC<HeaderProps> = ({
           <button
             type="button"
             onClick={handleGalleryClick}
-            className={`font-label-caps text-xs xl:text-label-caps uppercase tracking-wider xl:tracking-widest transition-colors cursor-pointer py-1 whitespace-nowrap ${
-              currentPage === 'gallery'
-                ? 'text-on-surface font-bold underline underline-offset-8 decoration-secondary'
+            className={`nav-link font-label-caps text-xs xl:text-label-caps uppercase tracking-wider xl:tracking-widest transition-colors cursor-pointer py-1 whitespace-nowrap ${
+              onGallery
+                ? 'nav-link-active text-on-surface font-bold'
                 : 'text-on-surface-variant hover:text-on-surface'
             }`}
             data-path="gallery"
@@ -128,7 +123,7 @@ export const Header: React.FC<HeaderProps> = ({
           <button
             type="button"
             onClick={() => handleNavClick('reviews')}
-            className="text-on-surface-variant hover:text-on-surface font-label-caps text-xs xl:text-label-caps uppercase tracking-wider xl:tracking-widest transition-colors cursor-pointer py-1 whitespace-nowrap"
+            className="nav-link text-on-surface-variant hover:text-on-surface font-label-caps text-xs xl:text-label-caps uppercase tracking-wider xl:tracking-widest transition-colors cursor-pointer py-1 whitespace-nowrap"
             data-path="reviews"
             id="nav-reviews"
           >
@@ -171,10 +166,7 @@ export const Header: React.FC<HeaderProps> = ({
           <button
             id="btn-book-consultation-header"
             type="button"
-            onClick={() => {
-              setMobileMenuOpen(false);
-              onBookClick();
-            }}
+            onClick={handleBookClick}
             className="hidden sm:inline-flex items-center justify-center px-4 md:px-5 lg:px-6 py-2.5 rounded-full bg-primary-container text-on-primary font-label-caps text-xs lg:text-label-caps uppercase tracking-wider hover:bg-secondary transition-all shadow-sm cursor-pointer whitespace-nowrap active:scale-95 min-h-[40px]"
             data-path="vip-consultation"
           >
@@ -300,10 +292,7 @@ export const Header: React.FC<HeaderProps> = ({
               <button
                 id="mobile-nav-book-btn"
                 type="button"
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  onBookClick();
-                }}
+                onClick={handleBookClick}
                 className="w-full sm:w-auto min-h-[46px] px-7 py-3 rounded-full bg-primary-container text-on-primary text-xs uppercase tracking-widest font-bold hover:bg-secondary transition-colors text-center shadow-sm flex items-center justify-center gap-2 cursor-pointer active:scale-95"
               >
                 <span>{isArabic ? 'حجز موعد الآن' : 'Book Appointment Now'}</span>

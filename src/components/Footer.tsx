@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Instagram,
   Linkedin,
@@ -8,11 +9,13 @@ import {
 } from 'lucide-react';
 import { Language } from '../types';
 import { CLINIC_INFO } from '../data/content';
+import { useSectionNav } from '../hooks/useSectionNav';
+import { SafeImage } from './SafeImage';
+import { MapWidget } from './MapWidget';
 import teethLogo from '../assets/images/teeth_transparent.png';
 
 interface FooterProps {
   language: Language;
-  onNavigate?: (page: 'home' | 'gallery', sectionId?: string) => void;
 }
 
 // Official WhatsApp icon
@@ -27,48 +30,26 @@ const WhatsAppIcon: React.FC<{ className?: string }> = ({ className = 'w-4 h-4' 
   </svg>
 );
 
-export const Footer: React.FC<FooterProps> = ({ language, onNavigate }) => {
+export const Footer: React.FC<FooterProps> = ({ language }) => {
   const isArabic = language === 'ar';
   const currentYear = new Date().getFullYear();
+  const navigate = useNavigate();
+  const scrollToSection = useSectionNav();
 
-  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, sectionId: string) => {
-    e.preventDefault();
-    if (onNavigate) {
-      onNavigate('home', sectionId);
-    } else {
-      const el = document.getElementById(sectionId);
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth' });
-      }
-    }
-  };
-
-  const navLinks = [
-    {
-      id: 'disciplines',
-      labelEn: 'Services',
-      labelAr: 'الخدمات',
-    },
-    {
-      id: 'sanctuary',
-      labelEn: 'About Clinic',
-      labelAr: 'عن العيادة',
-    },
-    {
-      id: 'gallery',
-      labelEn: 'Gallery',
-      labelAr: 'الصور',
-    },
-    {
-      id: 'reviews',
-      labelEn: 'Reviews',
-      labelAr: 'الآراء',
-    },
-    {
-      id: 'booking',
-      labelEn: 'Book Appointment',
-      labelAr: 'حجز موعد',
-    },
+  // Each quick link is either a standalone route or a home-page section.
+  const navLinks: {
+    id: string;
+    labelEn: string;
+    labelAr: string;
+    to?: string;
+    section?: string;
+  }[] = [
+    { id: 'disciplines', labelEn: 'Services', labelAr: 'الخدمات', section: 'disciplines' },
+    { id: 'about', labelEn: 'About Clinic', labelAr: 'عن العيادة', section: 'experience' },
+    { id: 'gallery', labelEn: 'Gallery', labelAr: 'الصور', to: '/gallery' },
+    { id: 'reviews', labelEn: 'Reviews', labelAr: 'الآراء', section: 'reviews' },
+    { id: 'links', labelEn: 'All Links', labelAr: 'كل الروابط', to: '/links' },
+    { id: 'booking', labelEn: 'Book Appointment', labelAr: 'حجز موعد', section: 'booking' },
   ];
 
   const socialLinks = [
@@ -96,24 +77,27 @@ export const Footer: React.FC<FooterProps> = ({ language, onNavigate }) => {
   ];
 
   return (
-    <footer className="w-full bg-black border-t border-white/10 text-slate-300">
-      <div className="max-w-[1440px] mx-auto px-6 lg:px-12 pt-14 pb-10">
-        {/* Main Structured 3-Column Layout */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-12 pb-12 border-b border-white/10">
-          {/* Col 1: Clinic Name & Social Icons Only (5 cols on lg) */}
-          <div className="lg:col-span-5 flex flex-col justify-between space-y-6">
-            <div className="flex items-center gap-3.5">
-              <img
-                src={teethLogo}
-                alt={isArabic ? 'شعار عيادة كريستال' : 'Crystal Dental Logo'}
-                className="w-12 h-12 object-contain shrink-0"
-                referrerPolicy="no-referrer"
-              />
-              <div className="space-y-1">
-                <h2 className="text-xl font-bold uppercase tracking-wider text-white">
+    <footer className="w-full bg-gradient-to-b from-[#006971] to-[#014a50] text-white/80">
+      <div className="max-w-[1440px] mx-auto px-6 lg:px-12 pt-16 pb-8">
+        {/* Main layout: content on one side, square map on the other */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-10">
+          {/* Content column */}
+          <div className="lg:col-span-7 xl:col-span-8 flex flex-col gap-10 sm:gap-12">
+            {/* Brand */}
+            <div className="flex items-start gap-4">
+              <span className="w-16 h-16 rounded-2xl bg-white/10 ring-1 ring-white/15 flex items-center justify-center shrink-0 p-3">
+                <SafeImage
+                  src={teethLogo}
+                  alt={isArabic ? 'شعار عيادة كريستال' : 'Crystal Dental Logo'}
+                  className="w-full h-full object-contain"
+                  referrerPolicy="no-referrer"
+                />
+              </span>
+              <div>
+                <h2 className="text-xl sm:text-2xl font-bold uppercase tracking-wide text-white">
                   {isArabic ? CLINIC_INFO.nameAr : CLINIC_INFO.name}
                 </h2>
-                <p className="text-xs sm:text-sm text-slate-400 font-normal">
+                <p className="mt-1.5 text-sm leading-relaxed text-white/55 max-w-sm">
                   {isArabic
                     ? `${CLINIC_INFO.founderAr} · برج كريستال، الشرق، الكويت`
                     : `${CLINIC_INFO.founder} · Crystal Tower, Sharq, Kuwait`}
@@ -121,108 +105,132 @@ export const Footer: React.FC<FooterProps> = ({ language, onNavigate }) => {
               </div>
             </div>
 
-            {/* Social Media - Only Icons */}
-            <div className="space-y-3">
-              <span className="text-xs font-medium text-slate-400">
-                {isArabic ? 'تابعنا' : 'Follow Us'}
-              </span>
-              <div className="flex items-center gap-3">
-                {socialLinks.map((item) => {
-                  const Icon = item.icon;
-                  return (
-                    <a
-                      key={item.id}
-                      id={item.id}
-                      href={item.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className={`w-10 h-10 rounded-full bg-white/10 border border-white/15 flex items-center justify-center text-white transition-all duration-200 hover:scale-105 select-none ${item.hoverClass}`}
-                      aria-label={item.name}
-                      title={item.name}
-                    >
-                      <Icon className="w-4 h-4" />
-                    </a>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
+            {/* Explore + Get in touch */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 sm:gap-10">
+              {/* Quick Links */}
+              <nav className="flex flex-col">
+                <span className="text-xs font-semibold uppercase tracking-[0.18em] text-white/45">
+                  {isArabic ? 'روابط سريعة' : 'Quick Links'}
+                </span>
+                <ul className="mt-4 space-y-2.5 text-sm">
+                  {navLinks.map((link) => (
+                    <li key={link.id}>
+                      <a
+                        id={`footer-nav-${link.id}`}
+                        href={link.to ? `#${link.to}` : '#/'}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          if (link.to) navigate(link.to);
+                          else if (link.section) scrollToSection(link.section);
+                        }}
+                        className="group inline-flex items-center gap-2.5 text-white/70 hover:text-white transition-colors"
+                      >
+                        <span className="h-px w-4 bg-white/30 group-hover:w-6 group-hover:bg-secondary-fixed transition-all duration-300" />
+                        <span>{isArabic ? link.labelAr : link.labelEn}</span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
 
-          {/* Col 2: Quick Links (3 cols on lg) */}
-          <div className="lg:col-span-3 space-y-3.5">
-            <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-              {isArabic ? 'روابط سريعة' : 'Quick Links'}
-            </span>
-            <ul className="space-y-2.5 text-xs sm:text-sm">
-              {navLinks.map((link) => (
-                <li key={link.id}>
+              {/* Get in Touch */}
+              <div className="flex flex-col">
+                <span className="text-xs font-semibold uppercase tracking-[0.18em] text-white/45">
+                  {isArabic ? 'تواصل معنا' : 'Get in Touch'}
+                </span>
+                <div className="mt-4 space-y-3">
                   <a
-                    id={`footer-nav-${link.id}`}
-                    href={`#${link.id}`}
-                    onClick={(e) => handleLinkClick(e, link.id)}
-                    className="text-slate-400 hover:text-white transition-colors inline-flex items-center gap-1.5"
+                    id="footer-contact-phone"
+                    href={`tel:${CLINIC_INFO.telephone}`}
+                    className="group flex items-center gap-3 text-white/80 hover:text-white"
                   >
-                    <span>{isArabic ? link.labelAr : link.labelEn}</span>
+                    <span className="w-9 h-9 rounded-xl bg-white/10 ring-1 ring-white/15 flex items-center justify-center shrink-0 group-hover:bg-white/20 transition-colors">
+                      <Phone className="w-4 h-4" />
+                    </span>
+                    <span className="flex flex-col">
+                      <span className="text-[11px] uppercase tracking-wider text-white/45">{isArabic ? 'اتصال' : 'Call'}</span>
+                      <span className="text-sm font-medium">{CLINIC_INFO.telephoneDisplay}</span>
+                    </span>
                   </a>
-                </li>
-              ))}
-            </ul>
-          </div>
 
-          {/* Col 3: Contact Us (4 cols on lg) */}
-          <div className="lg:col-span-4 space-y-3.5">
-            <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-              {isArabic ? 'تواصل معنا' : 'Contact Us'}
-            </span>
-            <div className="space-y-2.5 text-xs sm:text-sm text-slate-400">
-              {/* Phone */}
-              <div className="flex items-center gap-2.5">
-                <Phone className="w-4 h-4 text-slate-400 shrink-0" />
-                <a
-                  id="footer-contact-phone"
-                  href={`tel:${CLINIC_INFO.telephone}`}
-                  className="hover:text-white font-medium transition-colors"
-                >
-                  {CLINIC_INFO.telephoneDisplay}
-                </a>
-              </div>
+                  <a
+                    id="footer-contact-whatsapp"
+                    href={`https://wa.me/${CLINIC_INFO.whatsapp}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group flex items-center gap-3 text-white/80 hover:text-white"
+                  >
+                    <span className="w-9 h-9 rounded-xl bg-white/10 ring-1 ring-white/15 flex items-center justify-center shrink-0 group-hover:bg-white/20 transition-colors">
+                      <WhatsAppIcon className="w-4 h-4" />
+                    </span>
+                    <span className="flex flex-col">
+                      <span className="text-[11px] uppercase tracking-wider text-white/45">{isArabic ? 'واتساب' : 'WhatsApp'}</span>
+                      <span className="text-sm font-medium">{CLINIC_INFO.whatsappDisplay}</span>
+                    </span>
+                  </a>
 
-              {/* WhatsApp direct */}
-              <div className="flex items-center gap-2.5">
-                <WhatsAppIcon className="w-4 h-4 text-[#25D366] shrink-0" />
-                <a
-                  id="footer-contact-whatsapp"
-                  href={`https://wa.me/${CLINIC_INFO.whatsapp}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-white font-medium transition-colors"
-                >
-                  {CLINIC_INFO.whatsappDisplay}
-                </a>
-              </div>
+                  <p className="flex items-center gap-3 text-white/80 pt-0.5">
+                    <span className="w-9 h-9 rounded-xl bg-white/10 ring-1 ring-white/15 flex items-center justify-center shrink-0">
+                      <MapPin className="w-4 h-4" />
+                    </span>
+                    <span className="text-sm leading-relaxed">{isArabic ? CLINIC_INFO.addressAr : CLINIC_INFO.address}</span>
+                  </p>
+                </div>
 
-              {/* Location */}
-              <div className="flex items-start gap-2.5 pt-1">
-                <MapPin className="w-4 h-4 text-slate-400 shrink-0 mt-0.5" />
-                <a
-                  id="footer-contact-map"
-                  href={CLINIC_INFO.googleMaps}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-white transition-colors inline-flex items-center gap-1 leading-relaxed"
-                >
-                  <span>{isArabic ? 'خرائط جوجل' : 'Google Map'}</span>
-                  <ArrowUpRight className="w-3.5 h-3.5 shrink-0 text-slate-400" />
-                </a>
+                {/* Social */}
+                <div className="flex items-center gap-2.5 mt-6">
+                  {socialLinks.map((item) => {
+                    const Icon = item.icon;
+                    return (
+                      <a
+                        key={item.id}
+                        id={item.id}
+                        href={item.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={`w-10 h-10 rounded-xl bg-white/10 ring-1 ring-white/15 flex items-center justify-center text-white transition-all duration-200 hover:scale-105 select-none ${item.hoverClass}`}
+                        aria-label={item.name}
+                        title={item.name}
+                      >
+                        <Icon className="w-4 h-4" />
+                      </a>
+                    );
+                  })}
+                </div>
               </div>
             </div>
+          </div>
+
+          {/* Square map on the side */}
+          <div className="lg:col-span-5 xl:col-span-4 flex flex-col">
+            <div className="flex items-center justify-between gap-4 mb-4">
+              <span className="text-xs font-semibold uppercase tracking-wider text-white/50">
+                {isArabic ? 'موقعنا' : 'Find Us'}
+              </span>
+              <a
+                id="footer-map-directions"
+                href={CLINIC_INFO.googleMaps}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-white/70 hover:text-white inline-flex items-center gap-1 transition-colors"
+              >
+                <span>{isArabic ? 'الاتجاهات' : 'Directions'}</span>
+                <ArrowUpRight className="w-3.5 h-3.5" />
+              </a>
+            </div>
+            <MapWidget
+              language={language}
+              id="footer-map"
+              className="w-full aspect-square border border-white/15"
+              roundedClassName="rounded-2xl"
+            />
           </div>
         </div>
 
         {/* Bottom Bar: Copyright & License */}
-        <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+        <div className="mt-12 pt-6 border-t border-white/15 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-white/55">
           <p>© {currentYear} {isArabic ? CLINIC_INFO.nameAr : CLINIC_INFO.name}. {isArabic ? 'جميع الحقوق محفوظة' : 'All rights reserved.'}</p>
-          <p className="font-mono text-[11px] text-slate-500">
+          <p className="font-mono text-[11px]">
             {isArabic ? CLINIC_INFO.licenseAr : CLINIC_INFO.license} · {isArabic ? 'دولة الكويت' : 'State of Kuwait'}
           </p>
         </div>

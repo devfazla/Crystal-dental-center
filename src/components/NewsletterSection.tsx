@@ -26,7 +26,7 @@ export const NewsletterSection: React.FC<NewsletterSectionProps> = ({ language }
   return (
     <section
       id="newsletter"
-      className="relative w-full min-h-[50vh] flex flex-col items-center justify-center px-4 sm:px-6 lg:px-16 py-16 sm:py-20 md:py-24 overflow-hidden bg-surface"
+      className="relative w-full min-h-[90vh] lg:min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 lg:px-16 py-16 sm:py-20 md:py-24 overflow-hidden bg-surface"
     >
       <div className="w-full max-w-xl mx-auto flex flex-col items-center justify-center text-center">
         {/* Heading: Free Subscription of Newsletter */}
@@ -34,12 +34,12 @@ export const NewsletterSection: React.FC<NewsletterSectionProps> = ({ language }
           {isArabic ? (
             <>
               اشتراك مجاني في <br />
-              <span className="font-serif italic font-normal text-secondary">النشرة البريدية</span>
+              <span className="italic font-semibold text-secondary">النشرة البريدية</span>
             </>
           ) : (
             <>
-              Free Subscription of <br />
-              <span className="font-serif italic font-normal text-secondary">Our Newsletter</span>
+              Free subscription <br />
+              to our <span className="italic font-semibold text-secondary">Newsletter</span>
             </>
           )}
         </h2>
@@ -50,12 +50,12 @@ export const NewsletterSection: React.FC<NewsletterSectionProps> = ({ language }
             className="w-full p-6 sm:p-8 rounded-2xl bg-secondary-container/20 border border-secondary-fixed/40 text-on-surface flex flex-col items-center gap-3 animate-fade-in"
           >
             <p className="font-medium text-lg text-secondary">
-              {isArabic ? 'تم تأكيد اشتراكك بنجاح!' : 'Subscription Confirmed!'}
+              {isArabic ? 'تم الاشتراك.' : 'Subscribed.'}
             </p>
             <p className="text-sm text-on-surface-variant max-w-md">
               {isArabic
-                ? 'شكراً لك. ستصلك أحدث المقالات السريرية وتحديثات صحة الفم والأسنان دورياً.'
-                : 'Thank you for subscribing. You will receive our latest clinical updates and oral healthcare journals.'}
+                ? 'تحديثات العيادة ومقالات صحة الفم والأسنان، دون غيرها.'
+                : "You're on the list. Clinical updates and oral care articles, nothing else."}
             </p>
             <button
               type="button"
@@ -66,7 +66,7 @@ export const NewsletterSection: React.FC<NewsletterSectionProps> = ({ language }
               }}
               className="mt-2 text-xs uppercase tracking-widest text-secondary hover:underline cursor-pointer min-h-[44px] flex items-center justify-center px-4"
             >
-              {isArabic ? 'اشتراك بعنوان بريد آخر' : 'Subscribe another email'}
+              {isArabic ? 'اشتراك بعنوان بريد آخر' : 'Add another email'}
             </button>
           </div>
         ) : (

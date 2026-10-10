@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { Discipline, Language } from '../types';
 import { DISCIPLINES } from '../data/content';
+import { SafeImage } from './SafeImage';
 
 interface DisciplinesSectionProps {
   language: Language;
@@ -59,8 +60,12 @@ export const DisciplinesSection: React.FC<DisciplinesSectionProps> = ({
         transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
         className="w-full max-w-[1440px] mx-auto flex items-center justify-center text-center pb-6 sm:pb-8 border-b border-outline-variant/30"
       >
-        <h2 className="font-headline-xl text-2xl min-[360px]:text-3xl sm:text-4xl md:text-5xl lg:text-[68px] lg:leading-[72px] text-on-surface uppercase tracking-tight text-center">
-          {isArabic ? 'خدمات وعلاجات الأسنان.' : 'OUR DENTAL SERVICES.'}
+        <h2 className="font-headline-xl text-2xl min-[360px]:text-3xl sm:text-4xl md:text-5xl lg:text-[68px] lg:leading-[72px] text-on-surface uppercase tracking-tight text-center font-extrabold">
+          {isArabic ? (
+            <>خدمات <span className="heading-accent">علاجات الأسنان</span>.</>
+          ) : (
+            <>Our <span className="heading-accent">Dental Services.</span></>
+          )}
         </h2>
       </motion.div>
 
@@ -79,7 +84,7 @@ export const DisciplinesSection: React.FC<DisciplinesSectionProps> = ({
           {DISCIPLINES.map((item) => {
             const isVisible = activeDiscipline.id === item.id;
             return (
-              <img
+              <SafeImage
                 key={item.id}
                 alt={isArabic ? item.titleAr : item.titleEn}
                 src={item.image}

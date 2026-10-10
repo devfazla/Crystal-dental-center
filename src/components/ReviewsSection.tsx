@@ -3,6 +3,7 @@ import { motion } from 'motion/react';
 import { Star, Sparkles, CheckCircle2 } from 'lucide-react';
 import { Language, ReviewItem } from '../types';
 import { REVIEWS } from '../data/content';
+import { SafeImage } from './SafeImage';
 
 interface ReviewsSectionProps {
   language: Language;
@@ -114,7 +115,7 @@ export const ReviewsSection: React.FC<ReviewsSectionProps> = ({ language }) => {
         {/* Author Header */}
         <div className="flex items-center justify-between gap-3.5">
           <div className="flex items-center gap-3.5 min-w-0">
-            <img
+            <SafeImage
               src={item.avatar}
               alt={isArabic ? item.authorAr : item.authorEn}
               className={`w-11 h-11 rounded-full object-cover shrink-0 ring-2 transition-all duration-300 ${
@@ -242,15 +243,19 @@ export const ReviewsSection: React.FC<ReviewsSectionProps> = ({ language }) => {
         className="w-full max-w-4xl mx-auto flex flex-col items-center justify-center text-center pb-4"
       >
         {/* Headline */}
-        <h2 className="text-3xl sm:text-4xl lg:text-[52px] lg:leading-[58px] font-bold text-slate-900 tracking-tight text-center">
-          {isArabic ? 'تجارب وآراء عملائنا ومراجعينا' : 'Reviews from our clients'}
+        <h2 className="text-3xl sm:text-4xl lg:text-[52px] lg:leading-[58px] font-extrabold text-slate-900 tracking-tight text-center">
+          {isArabic ? (
+            <>ما قاله <span className="heading-accent">المراجعون</span></>
+          ) : (
+            <>What Patients <span className="heading-accent">Said.</span></>
+          )}
         </h2>
 
         {/* Subtitle */}
         <p className="mt-3 text-slate-500 text-sm sm:text-base font-normal max-w-xl text-center">
           {isArabic
-            ? 'شهادات وتجارب حقيقية من مراجعي عيادتنا في برج كريستال'
-            : 'Testimonials from our clients around globe'}
+            ? 'آراء من عولجوا في هذه العيادة.'
+            : 'Reviews from people treated at this clinic.'}
         </p>
       </motion.div>
 

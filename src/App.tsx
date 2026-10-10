@@ -3,211 +3,113 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import React, { useState, useEffect, useCallback } from 'react';
+import {
+  HashRouter,
+  Routes,
+  Route,
+  Outlet,
+  Navigate,
+  useLocation,
+} from 'react-router-dom';
 import { Header } from './components/Header';
-import { HeroSection } from './components/HeroSection';
-import { IntroSection } from './components/IntroSection';
-import { DisciplinesSection } from './components/DisciplinesSection';
-import { SanctuarySection } from './components/SanctuarySection';
-import { GallerySection } from './components/GallerySection';
-import { ReviewsSection } from './components/ReviewsSection';
-import { GalleryPage } from './components/GalleryPage';
-import { BookingSection } from './components/BookingSection';
-import { NewsletterSection } from './components/NewsletterSection';
-import { DisciplineModal } from './components/DisciplineModal';
 import { Footer } from './components/Footer';
-import { DISCIPLINES } from './data/content';
-import { Discipline, Language } from './types';
+import { HomePage } from './components/HomePage';
+import { GalleryPage } from './components/GalleryPage';
+import { LinksPage } from './components/LinksPage';
+import { WhatsAppFab } from './components/WhatsAppFab';
+import { Language } from './types';
 
-export default function App() {
-  const [language, setLanguage] = useState<Language>('en');
-  const [currentPage, setCurrentPage] = useState<'home' | 'gallery'>('home');
-  const [selectedDiscipline, setSelectedDiscipline] = useState<Discipline>(DISCIPLINES[0]);
-  const [modalDiscipline, setModalDiscipline] = useState<Discipline | null>(null);
-  const [bookingDisciplineName, setBookingDisciplineName] = useState<string>('Invisalign & Orthodontics');
+// Page titles per route, localized. Applied whenever route or language changes.
+function pageTitle(pathname: string, language: Language): string {
+  const ar = language === 'ar';
+  if (pathname === '/gallery') {
+    return ar
+      ? 'معرض الحالات والنتائج قبل وبعد | مركز كريستال للأسنان'
+      : 'Smile Transformation Gallery & Clinical Results | Crystal Dental Center';
+  }
+  if (pathname === '/links') {
+    return ar ? 'روابط مركز كريستال للأسنان' : 'Crystal Dental Center | All Links';
+  }
+  return ar
+    ? 'مركز كريستال للأسنان | طب الأسنان التجميلي والجراحي | الشرق، الكويت'
+    : 'Crystal Dental Center | Aesthetic & Surgical Dentistry | Sharq, Kuwait';
+}
 
+// On route change, jump to top unless a cross-page section scroll is pending
+// (HomePage owns that scroll via location.state.scrollTo).
+function ScrollManager({ pathname }: { pathname: string }) {
+  const location = useLocation();
   useEffect(() => {
-    // Update document dir and lang attribute for authentic typography & RTL layout
-    document.documentElement.dir = language === 'ar' ? 'rtl' : 'ltr';
-    document.documentElement.lang = language;
-
-    // Dynamic SEO Title and Meta Description
-    if (currentPage === 'gallery') {
-      document.title = language === 'ar'
-        ? 'معرض الحالات والنتائج قبل وبعد | مركز كريستال للأسنان'
-        : 'Smile Transformation Gallery & Clinical Results | Crystal Dental Center';
-    } else {
-      document.title = language === 'ar'
-        ? 'مركز كريستال للأسنان | طب الأسنان التجميلي والجراحي | الشرق، الكويت'
-        : 'Crystal Dental Center | Aesthetic & Surgical Dentistry | Sharq, Kuwait';
+    if (!(location.state as { scrollTo?: string } | null)?.scrollTo) {
+      window.scrollTo(0, 0);
     }
-  }, [language, currentPage]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname]);
+  return null;
+}
 
-  // Handle URL hash changes
+// Sets the document title for every route, including the standalone links page
+// (which lives outside Layout and so has no header/footer).
+function RouteTitle({ language }: { language: Language }) {
+  const { pathname } = useLocation();
   useEffect(() => {
-    const handleHashChange = () => {
-      if (window.location.hash === '#gallery-page') {
-        setCurrentPage('gallery');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      } else if (window.location.hash === '' || window.location.hash === '#hero') {
-        setCurrentPage('home');
-      }
-    };
+    document.title = pageTitle(pathname, language);
+  }, [pathname, language]);
+  return null;
+}
 
-    if (window.location.hash === '#gallery-page') {
-      setCurrentPage('gallery');
-    }
-
-    window.addEventListener('hashchange', handleHashChange);
-    return () => window.removeEventListener('hashchange', handleHashChange);
-  }, []);
-
-  const toggleLanguage = () => {
-    setLanguage((prev) => (prev === 'en' ? 'ar' : 'en'));
-  };
-
-  const scrollToSection = (id: string) => {
-    if (currentPage !== 'home') {
-      setCurrentPage('home');
-      window.location.hash = id;
-      setTimeout(() => {
-        const el = document.getElementById(id);
-        if (el) {
-          el.scrollIntoView({ behavior: 'smooth' });
-        }
-      }, 50);
-      return;
-    }
-    const el = document.getElementById(id);
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
-  const handleNavigate = (page: 'home' | 'gallery', sectionId?: string) => {
-    if (page === 'gallery') {
-      setCurrentPage('gallery');
-      window.location.hash = 'gallery-page';
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else {
-      setCurrentPage('home');
-      if (sectionId) {
-        window.location.hash = sectionId;
-        setTimeout(() => {
-          const el = document.getElementById(sectionId);
-          if (el) {
-            el.scrollIntoView({ behavior: 'smooth' });
-          }
-        }, 50);
-      } else {
-        window.location.hash = '';
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }
-    }
-  };
-
-  const handleBookFromDiscipline = (disc: Discipline) => {
-    setBookingDisciplineName(disc.titleEn);
-    scrollToSection('booking');
-  };
+function Layout({
+  language,
+  onToggleLanguage,
+}: {
+  language: Language;
+  onToggleLanguage: () => void;
+}) {
+  const location = useLocation();
 
   return (
     <div className="flex flex-col min-h-screen bg-surface font-body-md text-body-md text-on-surface antialiased selection:bg-secondary/20 selection:text-secondary">
-      {/* Fixed Luxury Navigation Header */}
-      <Header
-        language={language}
-        currentPage={currentPage}
-        onNavigate={handleNavigate}
-        onToggleLanguage={toggleLanguage}
-        onBookClick={() => scrollToSection('booking')}
-      />
-
-      <AnimatePresence mode="wait">
-        {currentPage === 'gallery' ? (
-          /* Dedicated Gallery Page */
-          <motion.main
-            key="gallery"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-            className="w-full bg-surface"
-          >
-            <GalleryPage
-              language={language}
-              onBackToHome={() => handleNavigate('home')}
-              onBookClick={() => scrollToSection('booking')}
-            />
-          </motion.main>
-        ) : (
-          /* Main Home Experience */
-          <motion.main
-            key="home"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
-            className="w-full pt-20 bg-surface"
-          >
-            {/* Section 1: Hero / The Statement */}
-            <HeroSection language={language} />
-
-            {/* Full-screen Intro Section: Subtitle & Actions */}
-            <IntroSection
-              language={language}
-              onReserveClick={() => scrollToSection('booking')}
-              onExploreClick={() => scrollToSection('disciplines')}
-            />
-
-            {/* Section 2: Disciplines (Precision Craft) */}
-            <DisciplinesSection
-              language={language}
-              selectedDiscipline={selectedDiscipline}
-              onSelectDiscipline={(d) => setSelectedDiscipline(d)}
-              onOpenDetails={(d) => setModalDiscipline(d)}
-              onNextSection={() => scrollToSection('experience')}
-            />
-
-            {/* Section 3: Sanctuary (Comfort. Zero Compromise.) */}
-            <SanctuarySection
-              language={language}
-              onNextSection={() => scrollToSection('gallery')}
-            />
-
-            {/* Section 4: Architectural Gallery Showcase */}
-            <GallerySection
-              language={language}
-              onOpenGalleryPage={() => handleNavigate('gallery')}
-            />
-
-            {/* Section 5: Patient Voices & Reviews */}
-            <ReviewsSection language={language} />
-
-            {/* Section 6: Contact & VIP Concierge Consultation */}
-            <BookingSection
-              language={language}
-              initialDiscipline={bookingDisciplineName}
-              onScrollToTop={() => scrollToSection('hero')}
-            />
-
-            {/* Section 7: Newsletter (Free Subscription of Newsletter) */}
-            <NewsletterSection language={language} />
-          </motion.main>
-        )}
-      </AnimatePresence>
-
-      {/* Footer */}
-      <Footer language={language} onNavigate={handleNavigate} />
-
-      {/* Interactive Clinical Deep-Dive Modal */}
-      <DisciplineModal
-        discipline={modalDiscipline}
-        language={language}
-        onClose={() => setModalDiscipline(null)}
-        onBookDiscipline={handleBookFromDiscipline}
-      />
+      <Header language={language} onToggleLanguage={onToggleLanguage} />
+      <ScrollManager pathname={location.pathname} />
+      <main className="flex-1">
+        <Outlet />
+      </main>
+      <Footer language={language} />
     </div>
   );
 }
 
+export default function App() {
+  const [language, setLanguage] = useState<Language>('en');
+
+  // RTL / LTR + lang attribute drive the whole typographic system
+  useEffect(() => {
+    document.documentElement.dir = language === 'ar' ? 'rtl' : 'ltr';
+    document.documentElement.lang = language;
+  }, [language]);
+
+  const toggleLanguage = useCallback(
+    () => setLanguage((prev) => (prev === 'en' ? 'ar' : 'en')),
+    [],
+  );
+
+  return (
+    <HashRouter>
+      <RouteTitle language={language} />
+      <WhatsAppFab language={language} />
+      <Routes>
+        {/* Standalone link-in-bio page: no header / nav / footer */}
+        <Route
+          path="/links"
+          element={<LinksPage language={language} onToggleLanguage={toggleLanguage} />}
+        />
+        <Route element={<Layout language={language} onToggleLanguage={toggleLanguage} />}>
+          <Route path="/" element={<HomePage language={language} />} />
+          <Route path="/gallery" element={<GalleryPage language={language} />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Route>
+      </Routes>
+    </HashRouter>
+  );
+}

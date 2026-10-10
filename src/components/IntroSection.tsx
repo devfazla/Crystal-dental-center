@@ -18,7 +18,7 @@ export const IntroSection: React.FC<IntroSectionProps> = ({
   return (
     <section
       id="intro"
-      className="relative w-full py-16 sm:py-24 md:min-h-[55vh] flex flex-col justify-center items-center px-4 sm:px-8 lg:px-16 bg-surface"
+      className="relative w-full min-h-[90vh] lg:min-h-screen flex flex-col justify-center items-center px-4 sm:px-8 lg:px-16 py-16 sm:py-24 bg-surface"
     >
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
@@ -30,8 +30,8 @@ export const IntroSection: React.FC<IntroSectionProps> = ({
         {/* Short Subtitle Message */}
         <p className="font-headline-md text-xl min-[360px]:text-2xl sm:text-3xl lg:text-4xl text-on-surface font-light tracking-tight leading-relaxed max-w-2xl px-2">
           {isArabic
-            ? 'رعاية أسنان متقدمة مع إطلالة بانورامية على مدينة الكويت.'
-            : 'Expert dental care with panoramic views over Kuwait City.'}
+            ? 'عناية أسنان متخصصة من الدور الثامن، بإطلالة على مدينة الكويت.'
+            : 'Specialist dental care with the Kuwait City skyline out the window.'}
         </p>
 
         {/* Two Clean Buttons: Fluid on Mobile */}
