@@ -40,7 +40,7 @@ export const GallerySection: React.FC<GallerySectionProps> = ({
   return (
     <section
       id="gallery"
-      className="relative w-full min-h-screen flex flex-col px-4 sm:px-6 lg:px-12 pt-16 pb-20 lg:pb-24 bg-surface border-t border-outline-variant/30 overflow-hidden"
+      className="relative w-full md:min-h-screen flex flex-col px-4 sm:px-6 lg:px-12 pt-16 pb-20 lg:pb-24 bg-surface border-t border-outline-variant/30 overflow-hidden"
     >
       {/* Top Meta Bar */}
       <motion.div

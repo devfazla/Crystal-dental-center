@@ -18,7 +18,7 @@ export const IntroSection: React.FC<IntroSectionProps> = ({
   return (
     <section
       id="intro"
-      className="relative w-full min-h-[90vh] lg:min-h-screen flex flex-col justify-center items-center px-4 sm:px-8 lg:px-16 py-16 sm:py-24 bg-surface"
+      className="relative w-full md:min-h-[90vh] lg:min-h-screen flex flex-col justify-center items-center px-4 sm:px-8 lg:px-16 py-16 sm:py-24 bg-surface"
     >
       <motion.div 
         initial={{ opacity: 0, y: 20 }}

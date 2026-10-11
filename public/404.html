@@ -4,11 +4,18 @@
     <meta charset="utf-8" />
     <title>Crystal Dental Center | Sharq, Kuwait</title>
     <script>
-      // Single Page Apps for GitHub Pages redirection script
-      // Redirects any 404 URL path to the base index.html with preserved query parameters
-      sessionStorage.redirect = location.href;
+      // Single Page Apps for GitHub Pages (BrowserRouter fallback).
+      // Pages serves this file for any unknown path. Remember the requested
+      // path, then hand off to the app root; index.html restores it via
+      // history.replaceState before React Router initializes.
+      var l = window.location;
+      sessionStorage.setItem(
+        'spaRedirect',
+        l.pathname + l.search + l.hash
+      );
+      l.replace('/');
     </script>
-    <meta http-equiv="refresh" content="0;URL='./'" />
+    <meta http-equiv="refresh" content="0;URL='/'" />
   </head>
   <body>
     <p>Redirecting to Crystal Dental Center...</p>

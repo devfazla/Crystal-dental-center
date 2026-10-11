@@ -232,7 +232,7 @@ export const ReviewsSection: React.FC<ReviewsSectionProps> = ({ language }) => {
   return (
     <section
       id="reviews"
-      className="relative w-full min-h-screen flex flex-col justify-between px-4 sm:px-6 lg:px-12 pt-16 pb-20 lg:pb-24 bg-surface border-t border-outline-variant/30 overflow-hidden"
+      className="relative w-full md:min-h-screen flex flex-col justify-between px-4 sm:px-6 lg:px-12 pt-16 pb-20 lg:pb-24 bg-surface border-t border-outline-variant/30 overflow-hidden"
     >
       {/* Top Header */}
       <motion.div 

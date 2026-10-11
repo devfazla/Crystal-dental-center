@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { MapPin, ExternalLink } from 'lucide-react';
+import { MapPin, ExternalLink, RefreshCw } from 'lucide-react';
 import { Language } from '../types';
 import { CLINIC_INFO } from '../data/content';
 
@@ -30,15 +30,27 @@ export const MapWidget: React.FC<MapWidgetProps> = ({
 }) => {
   const isArabic = language === 'ar';
   const [state, setState] = useState<'loading' | 'ready' | 'error'>('loading');
+  const [reloadKey, setReloadKey] = useState(0);
   const loadedRef = useRef(false);
 
+  // Re-arm the timeout whenever we (re)enter the loading state so a retry that
+  // fails again still falls back to the error card.
   useEffect(() => {
-    // Cross-origin embeds don't reliably fire onError, so also time out.
+    if (state !== 'loading') return;
     const timer = setTimeout(() => {
       if (!loadedRef.current) setState((s) => (s === 'loading' ? 'error' : s));
     }, 8000);
     return () => clearTimeout(timer);
-  }, []);
+  }, [state, reloadKey]);
+
+  const retry = () => {
+    loadedRef.current = false;
+    setReloadKey((k) => k + 1);
+    setState('loading');
+  };
+
+  // Cache-buster so a retry forces a fresh network request for the embed.
+  const embedSrc = `${MAP_EMBED_SRC}&_r=${reloadKey}`;
 
   return (
     <div
@@ -47,8 +59,9 @@ export const MapWidget: React.FC<MapWidgetProps> = ({
     >
       {state !== 'error' && (
         <iframe
+          key={reloadKey}
           title={isArabic ? 'خارطة موقع العيادة' : 'Crystal Dental Center location map'}
-          src={MAP_EMBED_SRC}
+          src={embedSrc}
           className={`h-full w-full border-0 transition-opacity duration-500 ${
             state === 'ready' ? 'opacity-100' : 'opacity-0'
           }`}
@@ -92,6 +105,16 @@ export const MapWidget: React.FC<MapWidgetProps> = ({
             <span>{isArabic ? 'افتح في خرائط جوجل' : 'Open in Google Maps'}</span>
             <ExternalLink className="h-3.5 w-3.5" />
           </a>
+
+          <button
+            id={id ? `${id}-retry` : 'map-retry'}
+            type="button"
+            onClick={retry}
+            className="inline-flex items-center gap-1.5 rounded-full border border-slate-300 bg-white px-4 py-2 text-xs font-semibold text-slate-700 transition-colors hover:border-[#004d5a] hover:text-[#004d5a] cursor-pointer"
+          >
+            <RefreshCw className="h-3.5 w-3.5" />
+            <span>{isArabic ? 'إعادة المحاولة' : 'Retry'}</span>
+          </button>
         </div>
       )}
     </div>

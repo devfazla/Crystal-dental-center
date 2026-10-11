@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { HeroSection } from './HeroSection';
 import { IntroSection } from './IntroSection';
+import { ProductsPreviewSection } from './ProductsPreviewSection';
 import { DisciplinesSection } from './DisciplinesSection';
 import { SanctuarySection } from './SanctuarySection';
 import { GallerySection } from './GallerySection';
@@ -73,6 +74,9 @@ export const HomePage: React.FC<HomePageProps> = ({ language }) => {
         onReserveClick={() => scrollToSection('booking')}
         onExploreClick={() => scrollToSection('disciplines')}
       />
+
+      {/* Products preview strip: single row, links to /products */}
+      <ProductsPreviewSection language={language} />
 
       {/* Section 2: Disciplines (Precision Craft) */}
       <DisciplinesSection

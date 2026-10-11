@@ -3,6 +3,26 @@
   <head>
     <meta charset="UTF-8" />
     <script>
+      // GitHub Pages SPA fallback for BrowserRouter.
+      // A hard refresh on a deep route (e.g. /gallery) 404s on Pages, which
+      // serves 404.html; that file stashes the requested path and bounces to
+      // '/'. Here we restore the original path BEFORE React Router boots, so
+      // the app renders the right route and the URL stays clean.
+      (function () {
+        try {
+          var redirect = sessionStorage.getItem('spaRedirect');
+          if (
+            redirect &&
+            redirect.charAt(0) === '/' &&
+            window.location.pathname === '/'
+          ) {
+            sessionStorage.removeItem('spaRedirect');
+            window.history.replaceState({}, '', redirect);
+          }
+        } catch (e) {}
+      })();
+    </script>
+    <script>
       // Ensure window.fetch is writable and has a setter to avoid "Cannot set property fetch of #<Window> which has only a getter"
       (function () {
         try {

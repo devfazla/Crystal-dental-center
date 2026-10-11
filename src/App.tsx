@@ -5,7 +5,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import {
-  HashRouter,
+  BrowserRouter,
   Routes,
   Route,
   Outlet,
@@ -16,6 +16,8 @@ import { Header } from './components/Header';
 import { Footer } from './components/Footer';
 import { HomePage } from './components/HomePage';
 import { GalleryPage } from './components/GalleryPage';
+import { ProductsPage } from './components/ProductsPage';
+import { ConfirmBookingPage } from './components/ConfirmBookingPage';
 import { LinksPage } from './components/LinksPage';
 import { WhatsAppFab } from './components/WhatsAppFab';
 import { Language } from './types';
@@ -30,6 +32,16 @@ function pageTitle(pathname: string, language: Language): string {
   }
   if (pathname === '/links') {
     return ar ? 'روابط مركز كريستال للأسنان' : 'Crystal Dental Center | All Links';
+  }
+  if (pathname === '/products') {
+    return ar
+      ? 'منتجات العناية بالفم | مركز كريستال للأسنان'
+      : 'Oral Care Products | Crystal Dental Center';
+  }
+  if (pathname.startsWith('/book')) {
+    return ar
+      ? 'تأكيد الحجز | مركز كريستال للأسنان'
+      : 'Confirm Booking | Crystal Dental Center';
   }
   return ar
     ? 'مركز كريستال للأسنان | طب الأسنان التجميلي والجراحي | الشرق، الكويت'
@@ -95,7 +107,7 @@ export default function App() {
   );
 
   return (
-    <HashRouter>
+    <BrowserRouter>
       <RouteTitle language={language} />
       <WhatsAppFab language={language} />
       <Routes>
@@ -107,9 +119,11 @@ export default function App() {
         <Route element={<Layout language={language} onToggleLanguage={toggleLanguage} />}>
           <Route path="/" element={<HomePage language={language} />} />
           <Route path="/gallery" element={<GalleryPage language={language} />} />
+          <Route path="/products" element={<ProductsPage language={language} />} />
+          <Route path="/book/:productId" element={<ConfirmBookingPage language={language} />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
       </Routes>
-    </HashRouter>
+    </BrowserRouter>
   );
 }

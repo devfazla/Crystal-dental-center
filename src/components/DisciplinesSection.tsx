@@ -50,7 +50,7 @@ export const DisciplinesSection: React.FC<DisciplinesSectionProps> = ({
   return (
     <section
       id="disciplines"
-      className="relative w-full min-h-screen flex flex-col justify-between px-4 sm:px-6 lg:px-16 pt-12 sm:pt-14 pb-16 sm:pb-20 lg:pb-24 bg-surface"
+      className="relative w-full md:min-h-screen flex flex-col justify-between px-4 sm:px-6 lg:px-16 pt-12 sm:pt-14 pb-16 sm:pb-20 lg:pb-24 bg-surface"
     >
       {/* Top Meta Bar */}
       <motion.div 

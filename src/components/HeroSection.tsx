@@ -127,7 +127,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ language }) => {
   return (
     <section
       id="hero"
-      className="relative w-full min-h-[calc(100vh-5rem)] flex flex-col justify-center items-center px-3 sm:px-8 py-6 sm:py-8 lg:py-12 bg-surface"
+      className="relative w-full md:min-h-[calc(100vh-5rem)] flex flex-col justify-center items-center px-3 sm:px-8 py-6 sm:py-8 lg:py-12 bg-surface"
     >
       <div className="w-full max-w-5xl mx-auto flex flex-col items-center justify-center my-auto gap-5 sm:gap-8">
         {/* Monumental, Impactful Headline */}

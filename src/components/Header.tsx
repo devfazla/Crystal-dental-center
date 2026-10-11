@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Menu, X, Sparkles, Stethoscope, Image as ImageIcon, Star, MapPin, Phone, ArrowRight } from 'lucide-react';
+import { Menu, X, Sparkles, Stethoscope, Image as ImageIcon, Star, MapPin, Phone, ArrowRight, ShoppingBag } from 'lucide-react';
 import { Language } from '../types';
 import { CLINIC_INFO } from '../data/content';
 import { useSectionNav } from '../hooks/useSectionNav';
@@ -21,6 +21,7 @@ export const Header: React.FC<HeaderProps> = ({
   const location = useLocation();
   const scrollToSection = useSectionNav();
   const onGallery = location.pathname === '/gallery';
+  const onProducts = location.pathname === '/products';
   const [scrollProgress, setScrollProgress] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -47,6 +48,11 @@ export const Header: React.FC<HeaderProps> = ({
   const handleGalleryClick = () => {
     setMobileMenuOpen(false);
     navigate('/gallery');
+  };
+
+  const handleProductsClick = () => {
+    setMobileMenuOpen(false);
+    navigate('/products');
   };
 
   const handleBookClick = () => {
@@ -119,6 +125,19 @@ export const Header: React.FC<HeaderProps> = ({
             id="nav-gallery"
           >
             {isArabic ? 'المعرض' : 'Gallery'}
+          </button>
+          <button
+            type="button"
+            onClick={handleProductsClick}
+            className={`nav-link font-label-caps text-xs xl:text-label-caps uppercase tracking-wider xl:tracking-widest transition-colors cursor-pointer py-1 whitespace-nowrap ${
+              onProducts
+                ? 'nav-link-active text-on-surface font-bold'
+                : 'text-on-surface-variant hover:text-on-surface'
+            }`}
+            data-path="products"
+            id="nav-products"
+          >
+            {isArabic ? 'المتجر' : 'Products'}
           </button>
           <button
             type="button"
@@ -249,6 +268,25 @@ export const Header: React.FC<HeaderProps> = ({
                   </span>
                   <span className="text-xs text-on-surface-variant font-normal">
                     {isArabic ? 'جولة حصرية ونتائج الابتسامات' : 'Explore Suites & Smile Results'}
+                  </span>
+                </div>
+              </button>
+
+              <button
+                type="button"
+                onClick={handleProductsClick}
+                className="p-3.5 sm:p-4 rounded-xl border border-outline-variant/30 hover:border-secondary/60 bg-surface-container-lowest hover:bg-surface-container-low transition-all text-start group flex items-center gap-3.5 cursor-pointer min-h-[52px] active:scale-[0.99]"
+                id="mobile-nav-products"
+              >
+                <span className="w-10 h-10 rounded-lg bg-secondary/10 group-hover:bg-secondary text-secondary group-hover:text-white flex items-center justify-center transition-colors shrink-0">
+                  <ShoppingBag className="w-5 h-5" />
+                </span>
+                <div className="flex flex-col">
+                  <span className="text-sm font-semibold uppercase tracking-wider text-on-surface group-hover:text-secondary transition-colors">
+                    {isArabic ? 'المتجر' : 'Products'}
+                  </span>
+                  <span className="text-xs text-on-surface-variant font-normal">
+                    {isArabic ? 'منتجات العناية بالفم والأسنان' : 'Oral Care Products'}
                   </span>
                 </div>
               </button>

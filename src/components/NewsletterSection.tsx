@@ -26,7 +26,7 @@ export const NewsletterSection: React.FC<NewsletterSectionProps> = ({ language }
   return (
     <section
       id="newsletter"
-      className="relative w-full min-h-[90vh] lg:min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 lg:px-16 py-16 sm:py-20 md:py-24 overflow-hidden bg-surface"
+      className="relative w-full md:min-h-[90vh] lg:min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 lg:px-16 py-16 sm:py-20 md:py-24 overflow-hidden bg-surface"
     >
       <div className="w-full max-w-xl mx-auto flex flex-col items-center justify-center text-center">
         {/* Heading: Free Subscription of Newsletter */}

@@ -34,7 +34,7 @@ export const MapSection: React.FC<MapSectionProps> = ({ language }) => {
       </div>
 
       {/* Full-height block: map frame + two actions, nothing else */}
-      <div className="min-h-[90vh] lg:min-h-screen w-full flex flex-col items-center justify-center gap-8 py-16 sm:py-20 px-4 sm:px-8 lg:px-16 bg-[#f1f7f6] border-b border-outline-variant/30">
+      <div className="md:min-h-[90vh] lg:min-h-screen w-full flex flex-col items-center justify-center gap-8 py-16 sm:py-20 px-4 sm:px-8 lg:px-16 bg-[#f1f7f6] border-b border-outline-variant/30">
         <motion.div
           initial={{ opacity: 0, scale: 0.98 }}
           whileInView={{ opacity: 1, scale: 1 }}

@@ -1,4 +1,5 @@
-import { Discipline, GalleryItem, ReviewItem } from '../types';
+import { Discipline, GalleryItem, ReviewItem, Product } from '../types';
+import skylineSuiteImg from '../assets/images/sanctuary_skyline_suite_1789122138231.jpg';
 
 export const CLINIC_INFO = {
   name: 'Crystal Dental Center',
@@ -13,6 +14,7 @@ export const CLINIC_INFO = {
   licenseAr: 'ترخيص رقم 172-أ',
   telephone: '+965 22970112',
   telephoneDisplay: '+965 22970112',
+  email: 'info@crystal-dental-center.com',
   whatsapp: '96599012112',
   whatsappDisplay: '+965 99012112',
   instagram: 'https://instagram.com/crystal.dental.center',
@@ -26,7 +28,8 @@ export const IMAGES = {
   heroSuite: '/original/crystal_reception_operatory_5472x3648.jpg',
   heroChair: '/hero_video_thumbnail.jpg',
   operatoryMain: '/original/crystal_clinic_view_1.jpg',
-  clinicOverview: '/original/crystal_clinic_view_1.jpg',
+  // Real 8th-floor operatory with a panoramic view over the Kuwait City skyline / Gulf
+  clinicOverview: skylineSuiteImg,
   // Authentic pediatric care at Crystal Dental Center
   sanctuaryPediatric: '/original/crystal_pediatric_care.jpg',
   // Authentic clinical care with state-of-the-art dental chair & equipment
@@ -40,6 +43,11 @@ export const IMAGES = {
   // High-res Crystal Dental Center brand banner & emblem (2339x1654)
   bannerLogo: '/original/crystal_banner_logo.jpg',
   bookingBg: '/original/crystal_reception_operatory_5472x3648.jpg',
+  // Treatment-specific photography so each service card shows the actual procedure.
+  serviceInvisalign: '/services/invisalign.jpg',
+  serviceImplants: '/services/implants.jpg',
+  serviceEndo: '/services/endodontics.jpg',
+  serviceCleaning: '/services/cleaning.jpg',
 };
 
 export const VIDEOS = {
@@ -72,7 +80,7 @@ export const DISCIPLINES: Discipline[] = [
     leadDoctorAr: 'أخصائيو تقويم الأسنان المعتمدون دولياً',
     technologyEn: 'iTero Element 5D Imaging Suite',
     technologyAr: 'ماسح آيتيرو ثلاثي الأبعاد 5D',
-    image: IMAGES.heroSuite,
+    image: IMAGES.serviceInvisalign,
   },
   {
     id: 'implants',
@@ -99,7 +107,7 @@ export const DISCIPLINES: Discipline[] = [
     leadDoctorAr: 'استشاري جراحة وزراعة الأسنان',
     technologyEn: 'Guided Surgery with 3D CBCT Planning',
     technologyAr: 'الأشعة المقطعية ثلاثية الأبعاد والملاحة الجراحية',
-    image: IMAGES.operatoryMain,
+    image: IMAGES.serviceImplants,
   },
   {
     id: 'endo',
@@ -126,7 +134,7 @@ export const DISCIPLINES: Discipline[] = [
     leadDoctorAr: 'أخصائي علاج جذور الأسنان المجهري',
     technologyEn: 'Leica M320 Dental Microscope',
     technologyAr: 'ميكروسكوب لايكا الجراحي الألماني M320',
-    image: IMAGES.sanctuaryDoctorCare,
+    image: IMAGES.serviceEndo,
   },
   {
     id: 'prophylaxis',
@@ -153,7 +161,7 @@ export const DISCIPLINES: Discipline[] = [
     leadDoctorAr: 'أخصائيو صحة الفم والأسنان الوقائية',
     technologyEn: 'EMS Swiss Piezon® & AirFlow',
     technologyAr: 'جهاز EMS AirFlow السويسري الأصلي',
-    image: IMAGES.sanctuaryPediatric,
+    image: IMAGES.serviceCleaning,
   },
 ];
 
@@ -234,6 +242,82 @@ export const GALLERY_ITEMS: GalleryItem[] = [
     descriptionEn: 'Founder and clinical director. Handles smile design and the complicated cases.',
     descriptionAr: 'المؤسسة والمديرة الطبية. تصمم الابتسامات وتتولى أدق الحالات.',
     image: IMAGES.doctorProfile,
+  },
+];
+
+// Products shown on the /products page grid + detailed view popup.
+// Fill this array with the product entries; each needs id, titleEn/Ar,
+// descEn/Ar, price, image. category* and features* are optional.
+export const PRODUCTS: Product[] = [
+  {
+    id: 'teeth-whitening',
+    titleEn: 'Teeth Whitening',
+    titleAr: 'تبييض الأسنان',
+    descEn:
+      'One session lifts the staining and leaves the enamel alone. We use the gentlest whitening systems we could find.',
+    descAr:
+      'إزالة تصبغات الأسنان في جلسة واحدة بدون أي ضرر، بأفضل التقنيات وأكثرها أماناً.',
+    image: '/products/teeth-whitening.png',
+  },
+  {
+    id: 'root-canal',
+    titleEn: 'Root Canal Treatment',
+    titleAr: 'علاج العصب',
+    descEn:
+      'Most root canals are done in a single visit, and you feel nothing. A laser sterilises the canals deeper than the old tools could reach.',
+    descAr:
+      'في جلسة واحدة وبدون ألم، بجهاز الليزر الأحدث في تعقيم الجذور والقنوات.',
+    image: '/products/root-canal.png',
+  },
+  {
+    id: 'crystal-smile',
+    titleEn: 'Crystal Smile',
+    titleAr: 'ابتسامة كريستال',
+    descEn:
+      'Slim cosmetic veneers that change your smile without looking like veneers. We use the thinnest strong ceramic there is.',
+    descAr:
+      'ابتسامة النجوم الساحرة بالقشور التجميلية، تمنحك التغيير الجذري باستخدام أفضل الخامات وأقل سماكة ممكنة.',
+    image: '/products/crystal-smile.png',
+  },
+  {
+    id: 'clear-aligners',
+    titleEn: 'Clear Aligners (Invisalign)',
+    titleAr: 'التقويم الشفاف (الإنفزلاين)',
+    descEn:
+      'Clear trays straighten crowded, protruding or cross-bitten teeth. They are nearly invisible, and they come out when you eat.',
+    descAr:
+      'الحل الجمالي الأمثل لتقويم الأسنان والتخلص من مشاكل التزاحم والبروز والعضة المعكوسة.',
+    image: '/products/clear-aligners.png',
+  },
+  {
+    id: 'metal-braces',
+    titleEn: 'Metal Braces',
+    titleAr: 'تقويم الأسنان المعدني',
+    descEn:
+      'The classic braces, still the surest fix for hard cases. Gaps, crooked teeth, bad bites, even the ones other places turn away.',
+    descAr:
+      'نتائج مدهشة ومضمونة بأحدث التقنيات لحل مشكلة الفراغات وعدم تناسق الأسنان لأصعب الحالات وأكثرها تعقيداً.',
+    image: '/products/metal-braces.png',
+  },
+  {
+    id: 'teeth-cleaning',
+    titleEn: 'Teeth Cleaning',
+    titleAr: 'تنظيف الأسنان',
+    descEn:
+      'Ultrasonic cleaning clears the tartar your brush leaves behind, and your teeth come back to their own colour. Safe, and easy on the enamel.',
+    descAr:
+      'نُعيد لك بريق أسنانك ونخلّصك من طبقات الجير المُتراكمة بإجراء آمن تماماً بواسطة الموجات فوق الصوتية.',
+    image: '/products/teeth-cleaning.png',
+  },
+  {
+    id: 'colored-braces',
+    titleEn: 'Colored Braces',
+    titleAr: 'التقويم الملوّن',
+    descEn:
+      'The same reliable braces, only you pick the band colour at every visit. A straighter smile with a little colour thrown in.',
+    descAr:
+      'لابتسامة جديدة بلون الفرح، اختر اللون اللي يناسبك وعدّل أسنانك بجمال التفاصيل.',
+    image: '/products/colored-braces.png',
   },
 ];
 

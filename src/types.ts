@@ -38,6 +38,23 @@ export interface GalleryItem {
   image: string;
 }
 
+export interface Product {
+  id: string;
+  titleEn: string;
+  titleAr: string;
+  descEn: string;
+  descAr: string;
+  // Optional display price as a ready-to-render string, e.g. '18 KWD'.
+  // Omitted when a catalog item has no listed price.
+  price?: string;
+  image: string;
+  categoryEn?: string;
+  categoryAr?: string;
+  // Optional bullet points shown in the detailed view popup.
+  featuresEn?: string[];
+  featuresAr?: string[];
+}
+
 export interface ReviewItem {
   id: string;
   authorEn: string;

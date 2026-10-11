@@ -85,7 +85,7 @@ export const BookingSection: React.FC<BookingSectionProps> = ({
   return (
     <section
       id="booking"
-      className="relative w-full min-h-screen flex flex-col justify-center items-center px-3 sm:px-6 lg:px-12 py-12 sm:py-16 md:py-20 bg-transparent"
+      className="relative w-full md:min-h-screen flex flex-col justify-center items-center px-3 sm:px-6 lg:px-12 py-12 sm:py-16 md:py-20 bg-transparent"
     >
       <motion.div
         initial={{ opacity: 0, scale: 0.98 }}

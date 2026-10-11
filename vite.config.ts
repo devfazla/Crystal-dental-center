@@ -66,7 +66,10 @@ function aistudioMediaPlugin(): Plugin {
 
 export default defineConfig(() => {
   return {
-    base: './',
+    // Absolute base so assets resolve from the site root on deep client-side
+    // routes (/gallery, /links). Required now that the app uses BrowserRouter
+    // on the custom domain (dental.devfazla.com), which is served at root.
+    base: '/',
     plugins: [react(), tailwindcss(), aistudioMediaPlugin()],
     resolve: {
       alias: {

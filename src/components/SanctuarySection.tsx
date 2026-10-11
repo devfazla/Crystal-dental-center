@@ -141,7 +141,7 @@ export const SanctuarySection: React.FC<SanctuarySectionProps> = ({
           <div
             key={card.id}
             id={`sanctuary-${card.id}`}
-            className={`min-h-[90vh] lg:min-h-screen w-full flex items-center justify-center py-16 sm:py-24 px-4 sm:px-8 lg:px-16 border-b border-outline-variant/30 last:border-b-0 ${card.bgClassName} transition-colors duration-300`}
+            className={`md:min-h-[90vh] lg:min-h-screen w-full flex items-center justify-center py-16 sm:py-24 px-4 sm:px-8 lg:px-16 border-b border-outline-variant/30 last:border-b-0 ${card.bgClassName} transition-colors duration-300`}
           >
             <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-10 sm:gap-14 lg:gap-16 xl:gap-20 items-center">
               {/* IMAGE COLUMN */}

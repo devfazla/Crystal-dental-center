@@ -4,6 +4,7 @@ import {
   Instagram,
   Linkedin,
   Phone,
+  Mail,
   MapPin,
   ArrowUpRight,
 } from 'lucide-react';
@@ -47,6 +48,7 @@ export const Footer: React.FC<FooterProps> = ({ language }) => {
     { id: 'disciplines', labelEn: 'Services', labelAr: 'الخدمات', section: 'disciplines' },
     { id: 'about', labelEn: 'About Clinic', labelAr: 'عن العيادة', section: 'experience' },
     { id: 'gallery', labelEn: 'Gallery', labelAr: 'الصور', to: '/gallery' },
+    { id: 'products', labelEn: 'Products', labelAr: 'المتجر', to: '/products' },
     { id: 'reviews', labelEn: 'Reviews', labelAr: 'الآراء', section: 'reviews' },
     { id: 'links', labelEn: 'All Links', labelAr: 'كل الروابط', to: '/links' },
     { id: 'booking', labelEn: 'Book Appointment', labelAr: 'حجز موعد', section: 'booking' },
@@ -150,6 +152,20 @@ export const Footer: React.FC<FooterProps> = ({ language }) => {
                     <span className="flex flex-col">
                       <span className="text-[11px] uppercase tracking-wider text-white/45">{isArabic ? 'اتصال' : 'Call'}</span>
                       <span className="text-sm font-medium">{CLINIC_INFO.telephoneDisplay}</span>
+                    </span>
+                  </a>
+
+                  <a
+                    id="footer-contact-email"
+                    href={`mailto:${CLINIC_INFO.email}`}
+                    className="group flex items-center gap-3 text-white/80 hover:text-white"
+                  >
+                    <span className="w-9 h-9 rounded-xl bg-white/10 ring-1 ring-white/15 flex items-center justify-center shrink-0 group-hover:bg-white/20 transition-colors">
+                      <Mail className="w-4 h-4" />
+                    </span>
+                    <span className="flex flex-col">
+                      <span className="text-[11px] uppercase tracking-wider text-white/45">{isArabic ? 'البريد' : 'Email'}</span>
+                      <span className="text-sm font-medium break-all">{CLINIC_INFO.email}</span>
                     </span>
                   </a>
 
