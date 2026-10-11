@@ -1,335 +1,123 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { motion } from 'motion/react';
-import {
-  Play,
-  Pause,
-  Volume2,
-  VolumeX,
-  Maximize2,
-  Minimize2,
-  RotateCcw,
-} from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import { Language } from '../types';
-import { IMAGES, VIDEOS } from '../data/content';
+import { IMAGES, VIDEOS, CLINIC_INFO } from '../data/content';
 import { SafeImage } from './SafeImage';
+import teethLogo from '../assets/images/teeth_transparent.png';
 
 interface HeroSectionProps {
   language: Language;
 }
 
+// Full-screen hero: the cinematic clip plays as an ambient cover background,
+// dimmed by a black overlay, with the Crystal Dental Center branding centered
+// on top. No inline player controls — the video is set dressing, not a widget.
 export const HeroSection: React.FC<HeroSectionProps> = ({ language }) => {
   const isArabic = language === 'ar';
-  const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [hasStarted, setHasStarted] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
-  const [volume, setVolume] = useState(1);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
-  const [isFullscreen, setIsFullscreen] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
-
-  const formatTime = (seconds: number) => {
-    if (isNaN(seconds) || seconds < 0) return '0:00';
-    const mins = Math.floor(seconds / 60);
-    const secs = Math.floor(seconds % 60);
-    return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
-  };
-
-  const togglePlay = (e?: React.MouseEvent) => {
-    if (e) e.stopPropagation();
-    if (!videoRef.current) return;
-
-    if (isPlaying) {
-      videoRef.current.pause();
-    } else {
-      videoRef.current.play().catch((err) => {
-        console.warn('Playback prevented:', err);
-      });
-    }
-  };
-
-  const handleTimeUpdate = () => {
-    if (!videoRef.current) return;
-    setCurrentTime(videoRef.current.currentTime);
-  };
-
-  const handleLoadedMetadata = () => {
-    if (!videoRef.current) return;
-    setDuration(videoRef.current.duration);
-  };
-
-  const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const targetTime = parseFloat(e.target.value);
-    if (videoRef.current) {
-      videoRef.current.currentTime = targetTime;
-      setCurrentTime(targetTime);
-    }
-  };
-
-  const toggleMute = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (!videoRef.current) return;
-    const newMuted = !isMuted;
-    videoRef.current.muted = newMuted;
-    setIsMuted(newMuted);
-  };
-
-  const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.stopPropagation();
-    const newVol = parseFloat(e.target.value);
-    if (!videoRef.current) return;
-    videoRef.current.volume = newVol;
-    setVolume(newVol);
-    if (newVol === 0) {
-      videoRef.current.muted = true;
-      setIsMuted(true);
-    } else if (isMuted) {
-      videoRef.current.muted = false;
-      setIsMuted(false);
-    }
-  };
-
-  const handleRestart = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (!videoRef.current) return;
-    videoRef.current.currentTime = 0;
-    videoRef.current.play().catch(console.warn);
-  };
-
-  const toggleFullscreen = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (!containerRef.current) return;
-
-    if (!document.fullscreenElement) {
-      containerRef.current.requestFullscreen?.().catch((err) => {
-        console.warn('Fullscreen request failed:', err);
-      });
-    } else {
-      document.exitFullscreen?.().catch((err) => {
-        console.warn('Exit fullscreen failed:', err);
-      });
-    }
-  };
-
+  // Enforce muted playback so autoplay is allowed by browser policies. React's
+  // muted prop isn't always reflected to the DOM attribute, so set it directly.
   useEffect(() => {
-    const handleFullscreenChange = () => {
-      setIsFullscreen(!!document.fullscreenElement);
-    };
-    document.addEventListener('fullscreenchange', handleFullscreenChange);
-    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+    const v = videoRef.current;
+    if (v) {
+      v.muted = true;
+      v.defaultMuted = true;
+      const attempt = v.play();
+      if (attempt) attempt.catch(() => {});
+    }
   }, []);
 
-  const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
+  const scrollToNext = () => {
+    const target = document.getElementById('intro');
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
 
   return (
     <section
       id="hero"
-      className="relative w-full md:min-h-[calc(100vh-5rem)] flex flex-col justify-center items-center px-3 sm:px-8 py-6 sm:py-8 lg:py-12 bg-surface"
+      className="relative w-full min-h-screen flex items-center justify-center overflow-hidden bg-black"
     >
-      <div className="w-full max-w-5xl mx-auto flex flex-col items-center justify-center my-auto gap-5 sm:gap-8">
-        {/* Monumental, Impactful Headline */}
-        <motion.h1
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
+      {/* Background video (cover, ambient, no controls) */}
+      <video
+        ref={videoRef}
+        autoPlay
+        loop
+        muted
+        playsInline
+        preload="metadata"
+        poster={IMAGES.heroChair}
+        className="absolute inset-0 w-full h-full object-cover object-center"
+      >
+        <source src={VIDEOS.heroCinematic} type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+
+      {/* Black overlay for legibility */}
+      <div className="absolute inset-0 bg-black/55" aria-hidden="true" />
+
+      {/* Centered branding */}
+      <div className="relative z-10 flex flex-col items-center text-center px-6 py-16">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-          className="font-display-hero text-2xl min-[360px]:text-3xl sm:text-5xl md:text-6xl lg:text-[68px] lg:leading-[74px] xl:text-[76px] xl:leading-[82px] tracking-tight text-on-surface uppercase text-center px-1"
+          className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-full bg-white/95 ring-1 ring-white/40 shadow-2xl flex items-center justify-center p-4"
         >
-          {isArabic ? (
-            <>
-              اصنع هوية <span className="italic font-normal text-secondary">ابتسامتك.</span>
-            </>
-          ) : (
-            <>
-              BRAND YOUR <span className="italic font-normal text-secondary">SMILE.</span>
-            </>
-          )}
+          <SafeImage
+            src={teethLogo}
+            alt={isArabic ? 'شعار مركز كريستال للأسنان' : 'Crystal Dental Center logo'}
+            className="w-full h-full object-contain"
+            referrerPolicy="no-referrer"
+          />
+        </motion.div>
+
+        <motion.h1
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
+          className="mt-6 md:mt-8 font-display-hero uppercase tracking-tight text-white text-3xl min-[360px]:text-4xl sm:text-5xl md:text-6xl lg:text-7xl leading-tight drop-shadow-lg"
+        >
+          {isArabic ? CLINIC_INFO.nameAr : CLINIC_INFO.name}
         </motion.h1>
 
-        {/* Landscape 16:9 Video Frame — matches the source clip so nothing crops */}
         <motion.div
-          ref={containerRef}
-          id="hero-video-frame"
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-          initial={{ opacity: 0, scale: 0.96 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-          className="relative aspect-video w-full max-w-[420px] min-[380px]:max-w-[460px] sm:max-w-[600px] md:max-w-[720px] lg:max-w-[840px] xl:max-w-[920px] rounded-2xl sm:rounded-3xl overflow-hidden shadow-lg bg-white border border-outline-variant/40 group select-none"
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+          className="mt-5 flex items-center gap-3 text-secondary-fixed"
         >
-          {/* HTML5 Video Element with landscape presentation & consultation thumbnail */}
-          <video
-            ref={videoRef}
-            loop
-            playsInline
-            preload="metadata"
-            poster={IMAGES.heroChair}
-            onPlay={() => {
-              setIsPlaying(true);
-              setHasStarted(true);
-            }}
-            onPause={() => setIsPlaying(false)}
-            onEnded={() => setIsPlaying(false)}
-            onTimeUpdate={handleTimeUpdate}
-            onLoadedMetadata={handleLoadedMetadata}
-            onClick={() => togglePlay()}
-            className="w-full h-full object-contain object-center bg-black cursor-pointer"
-          >
-            <source src={VIDEOS.heroCinematic} type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
-
-          {/* High-Fidelity Initial Thumbnail Poster */}
-          {!hasStarted && (
-            <SafeImage
-              src={IMAGES.heroChair}
-              alt="Crystal Dental Center Consultation"
-              referrerPolicy="no-referrer"
-              className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none transition-opacity duration-500"
-            />
-          )}
-
-          {/* Central Play/Pause Overlay Button */}
-          <div
-            onClick={() => togglePlay()}
-            className={`absolute inset-0 flex items-center justify-center transition-colors duration-300 pointer-events-auto cursor-pointer ${
-              !isPlaying
-                ? 'bg-black/20'
-                : isHovered
-                ? 'bg-black/20'
-                : 'bg-transparent pointer-events-none'
-            }`}
-          >
-            {(!isPlaying || isHovered) && (
-              <button
-                id="hero-video-center-toggle"
-                type="button"
-                onClick={togglePlay}
-                aria-label={
-                  isPlaying
-                    ? isArabic ? 'إيقاف مؤقت' : 'Pause video'
-                    : isArabic ? 'تشغيل الفيديو' : 'Play video'
-                }
-                className="w-14 h-14 sm:w-20 sm:h-20 rounded-full bg-surface/90 hover:bg-surface text-on-surface hover:text-secondary backdrop-blur-md border border-outline-variant/40 flex items-center justify-center transition-all shadow-xl hover:scale-105 active:scale-95 cursor-pointer pointer-events-auto"
-              >
-                {isPlaying ? (
-                  <Pause className="w-6 h-6 sm:w-8 sm:h-8 fill-current" />
-                ) : (
-                  <Play className="w-6 h-6 sm:w-8 sm:h-8 fill-current translate-x-0.5 rtl:-translate-x-0.5 text-on-surface" />
-                )}
-              </button>
-            )}
-          </div>
-
-          {/* Comprehensive Video Controls Bar (Seek, Fullscreen, Volume, Mute, Restart) */}
-          <div
-            className={`absolute bottom-0 inset-x-0 p-2.5 sm:p-4 bg-gradient-to-t from-black/90 via-black/60 to-transparent flex flex-col gap-2 transition-opacity duration-300 ${
-              isPlaying && !isHovered ? 'opacity-0 pointer-events-none' : 'opacity-100'
-            }`}
-          >
-            {/* Seek Progress Bar */}
-            <div className="w-full flex items-center gap-2">
-              <input
-                id="hero-video-seek"
-                type="range"
-                min="0"
-                max={duration || 100}
-                step="0.1"
-                value={currentTime}
-                onChange={handleSeek}
-                aria-label="Seek video position"
-                className="w-full h-1.5 bg-white/30 rounded-lg appearance-none cursor-pointer accent-secondary focus:outline-none hover:h-2 transition-all"
-                style={{
-                  background: `linear-gradient(to right, #b49b67 ${progressPercent}%, rgba(255,255,255,0.25) ${progressPercent}%)`,
-                }}
-              />
-            </div>
-
-            {/* Bottom Actions Row: Mobile-Optimized */}
-            <div className="flex items-center justify-between text-white text-xs sm:text-sm">
-              {/* Left Controls: Play/Pause, Restart, Time */}
-              <div className="flex items-center gap-1.5 sm:gap-3">
-                <button
-                  id="hero-video-play-btn"
-                  type="button"
-                  onClick={togglePlay}
-                  aria-label={isPlaying ? 'Pause' : 'Play'}
-                  className="p-2 min-h-[36px] min-w-[36px] flex items-center justify-center rounded-md hover:text-secondary transition-colors cursor-pointer"
-                >
-                  {isPlaying ? (
-                    <Pause className="w-4 h-4 sm:w-5 sm:h-5 fill-current" />
-                  ) : (
-                    <Play className="w-4 h-4 sm:w-5 sm:h-5 fill-current" />
-                  )}
-                </button>
-
-                <button
-                  id="hero-video-restart-btn"
-                  type="button"
-                  onClick={handleRestart}
-                  aria-label="Restart video"
-                  className="p-2 min-h-[36px] min-w-[36px] flex items-center justify-center rounded-md hover:text-secondary transition-colors cursor-pointer"
-                >
-                  <RotateCcw className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                </button>
-
-                <span className="font-mono text-[11px] sm:text-xs text-white/85 tabular-nums">
-                  {formatTime(currentTime)} / {formatTime(duration)}
-                </span>
-              </div>
-
-              {/* Right Controls: Volume + Fullscreen */}
-              <div className="flex items-center gap-1.5 sm:gap-3">
-                {/* Volume & Mute */}
-                <div className="flex items-center gap-1.5">
-                  <button
-                    id="hero-video-mute-btn"
-                    type="button"
-                    onClick={toggleMute}
-                    aria-label={isMuted ? 'Unmute' : 'Mute'}
-                    className="p-2 min-h-[36px] min-w-[36px] flex items-center justify-center rounded-md hover:text-secondary transition-colors cursor-pointer"
-                  >
-                    {isMuted || volume === 0 ? (
-                      <VolumeX className="w-4 h-4 sm:w-5 sm:h-5" />
-                    ) : (
-                      <Volume2 className="w-4 h-4 sm:w-5 sm:h-5" />
-                    )}
-                  </button>
-
-                  <input
-                    id="hero-video-volume"
-                    type="range"
-                    min="0"
-                    max="1"
-                    step="0.05"
-                    value={isMuted ? 0 : volume}
-                    onChange={handleVolumeChange}
-                    aria-label="Adjust volume"
-                    className="hidden min-[480px]:block w-14 sm:w-20 h-1.5 bg-white/30 rounded-lg appearance-none cursor-pointer accent-secondary focus:outline-none"
-                  />
-                </div>
-
-                {/* Fullscreen Toggle */}
-                <button
-                  id="hero-video-fullscreen-btn"
-                  type="button"
-                  onClick={toggleFullscreen}
-                  aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
-                  className="p-2 min-h-[36px] min-w-[36px] flex items-center justify-center rounded-md hover:text-secondary transition-colors cursor-pointer"
-                >
-                  {isFullscreen ? (
-                    <Minimize2 className="w-4 h-4 sm:w-5 sm:h-5" />
-                  ) : (
-                    <Maximize2 className="w-4 h-4 sm:w-5 sm:h-5" />
-                  )}
-                </button>
-              </div>
-            </div>
-          </div>
+          <span className="h-px w-8 bg-secondary-fixed/70" />
+          <span className="text-xs sm:text-sm font-medium uppercase tracking-[0.28em]">
+            {isArabic ? 'ابتسامتك، بهوية' : 'Brand Your Smile'}
+          </span>
+          <span className="h-px w-8 bg-secondary-fixed/70" />
         </motion.div>
+
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.9, delay: 0.45 }}
+          className="mt-5 max-w-md text-sm sm:text-base text-white/70 leading-relaxed"
+        >
+          {isArabic ? CLINIC_INFO.towerAr : CLINIC_INFO.tower}
+        </motion.p>
       </div>
+
+      {/* Scroll cue */}
+      <motion.button
+        id="hero-scroll-cue"
+        type="button"
+        onClick={scrollToNext}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.8, duration: 0.6 }}
+        aria-label={isArabic ? 'انزل للأسفل' : 'Scroll down'}
+        className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 text-white/70 hover:text-white transition-colors cursor-pointer animate-bounce"
+      >
+        <ChevronDown className="w-6 h-6" />
+      </motion.button>
     </section>
   );
 };

@@ -18,6 +18,9 @@ export const CLINIC_INFO = {
   whatsapp: '96599012112',
   whatsappDisplay: '+965 99012112',
   instagram: 'https://instagram.com/crystal.dental.center',
+  facebook: 'https://web.facebook.com/crystal.dental.kwt',
+  x: 'https://x.com/crystaldental',
+  youtube: 'https://youtube.com/@crystaldentalcenter2239',
   linkedin: 'https://www.linkedin.com/company/crystal-dental-center',
   googleMaps: 'https://maps.app.goo.gl/Y7LN29p4VBV2MEcG6',
   review: 'https://maps.app.goo.gl/Y7LN29p4VBV2MEcG6?review=1',
@@ -256,7 +259,7 @@ export const PRODUCTS: Product[] = [
     descEn:
       'One session lifts the staining and leaves the enamel alone. We use the gentlest whitening systems we could find.',
     descAr:
-      'إزالة تصبغات الأسنان في جلسة واحدة بدون أي ضرر، بأفضل التقنيات وأكثرها أماناً.',
+      'جلسة واحدة تزيل التصبغات وتترك المينا كما هي. نستخدم ألطف أنظمة التبييض التي وجدناها.',
     image: '/products/teeth-whitening.png',
   },
   {
@@ -266,7 +269,7 @@ export const PRODUCTS: Product[] = [
     descEn:
       'Most root canals are done in a single visit, and you feel nothing. A laser sterilises the canals deeper than the old tools could reach.',
     descAr:
-      'في جلسة واحدة وبدون ألم، بجهاز الليزر الأحدث في تعقيم الجذور والقنوات.',
+      'أغلب علاجات الجذور تنتهي في جلسة واحدة، دون أن تشعر بشيء. يعقّم الليزر القنوات أعمق مما تصله الأدوات القديمة.',
     image: '/products/root-canal.png',
   },
   {
@@ -276,7 +279,7 @@ export const PRODUCTS: Product[] = [
     descEn:
       'Slim cosmetic veneers that change your smile without looking like veneers. We use the thinnest strong ceramic there is.',
     descAr:
-      'ابتسامة النجوم الساحرة بالقشور التجميلية، تمنحك التغيير الجذري باستخدام أفضل الخامات وأقل سماكة ممكنة.',
+      'قشور تجميلية رفيعة تغيّر ابتسامتك من غير أن تبدو كقشور. نستخدم أرقّ سيراميك قوي متوفر.',
     image: '/products/crystal-smile.png',
   },
   {
@@ -286,7 +289,7 @@ export const PRODUCTS: Product[] = [
     descEn:
       'Clear trays straighten crowded, protruding or cross-bitten teeth. They are nearly invisible, and they come out when you eat.',
     descAr:
-      'الحل الجمالي الأمثل لتقويم الأسنان والتخلص من مشاكل التزاحم والبروز والعضة المعكوسة.',
+      'أطقم شفافة ترتّب الأسنان المزدحمة أو البارزة أو ذات العضة المعكوسة. شبه غير مرئية، وتُخلع وقت الأكل.',
     image: '/products/clear-aligners.png',
   },
   {
@@ -296,7 +299,7 @@ export const PRODUCTS: Product[] = [
     descEn:
       'The classic braces, still the surest fix for hard cases. Gaps, crooked teeth, bad bites, even the ones other places turn away.',
     descAr:
-      'نتائج مدهشة ومضمونة بأحدث التقنيات لحل مشكلة الفراغات وعدم تناسق الأسنان لأصعب الحالات وأكثرها تعقيداً.',
+      'التقويم المعدني المعتاد، وما زال أضمن حلّ للحالات الصعبة: الفراغات، الأسنان المعوّجة، وسوء الإطباق، حتى ما يعرض عنه غيره.',
     image: '/products/metal-braces.png',
   },
   {
@@ -306,7 +309,7 @@ export const PRODUCTS: Product[] = [
     descEn:
       'Ultrasonic cleaning clears the tartar your brush leaves behind, and your teeth come back to their own colour. Safe, and easy on the enamel.',
     descAr:
-      'نُعيد لك بريق أسنانك ونخلّصك من طبقات الجير المُتراكمة بإجراء آمن تماماً بواسطة الموجات فوق الصوتية.',
+      'التنظيف بالموجات فوق الصوتية يزيل الجير الذي يتركه الفرشاة، فتعود أسنانك إلى لونها الطبيعي. آمن ولطيف على المينا.',
     image: '/products/teeth-cleaning.png',
   },
   {
@@ -316,7 +319,7 @@ export const PRODUCTS: Product[] = [
     descEn:
       'The same reliable braces, only you pick the band colour at every visit. A straighter smile with a little colour thrown in.',
     descAr:
-      'لابتسامة جديدة بلون الفرح، اختر اللون اللي يناسبك وعدّل أسنانك بجمال التفاصيل.',
+      'نفس التقويم الموثوق، غير أنك تختار لون الحلقات في كل زيارة. ابتسامة أرتب، مع قليل من اللون.',
     image: '/products/colored-braces.png',
   },
 ];
@@ -476,3 +479,27 @@ export const REVIEWS: ReviewItem[] = [
     verified: true,
   },
 ];
+
+// Resolve any bookable id — a product (from /products) or a service/discipline
+// (from the "Our Dental Services." modal) — into the normalized Product shape
+// the confirm-booking page renders. Discipline ids and product ids are distinct,
+// so a single lookup is enough. Services have no price, so it stays undefined.
+export function getBookableItem(id: string | undefined): Product | null {
+  if (!id) return null;
+  const product = PRODUCTS.find((p) => p.id === id);
+  if (product) return product;
+  const disc = DISCIPLINES.find((d) => d.id === id);
+  if (!disc) return null;
+  return {
+    id: disc.id,
+    titleEn: disc.titleEn,
+    titleAr: disc.titleAr,
+    descEn: disc.summaryEn,
+    descAr: disc.summaryAr,
+    image: disc.image,
+    categoryEn: disc.categoryEn,
+    categoryAr: disc.categoryAr,
+    featuresEn: disc.detailsEn,
+    featuresAr: disc.detailsAr,
+  };
+}

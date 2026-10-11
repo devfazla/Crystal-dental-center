@@ -17,10 +17,89 @@ import { Footer } from './components/Footer';
 import { HomePage } from './components/HomePage';
 import { GalleryPage } from './components/GalleryPage';
 import { ProductsPage } from './components/ProductsPage';
+import { ContactPage } from './components/ContactPage';
 import { ConfirmBookingPage } from './components/ConfirmBookingPage';
 import { LinksPage } from './components/LinksPage';
 import { WhatsAppFab } from './components/WhatsAppFab';
 import { Language } from './types';
+
+// ---- Language auto-detection ------------------------------------------------
+// Persisted user choice overrides everything. If unset, we pick a default from
+// IP geolocation; if the lookup fails (offline, rate-limited, privacy block,
+// tracker blocker), we fall back to the browser's locale as a heuristic.
+const LANGUAGE_STORAGE_KEY = 'crystal-lang-pref';
+
+// Arab League members + Western Sahara. Iran, Turkey and Israel are excluded
+// because Arabic is not the primary language there even though they sit in the
+// Middle East, and forcing an Arabic UI on those visitors is worse than EN.
+const ARAB_COUNTRY_CODES = new Set([
+  'AE', 'BH', 'DJ', 'DZ', 'EG', 'EH', 'IQ', 'JO', 'KM', 'KW', 'LB', 'LY',
+  'MA', 'MR', 'OM', 'PS', 'QA', 'SA', 'SD', 'SO', 'SY', 'TN', 'YE',
+]);
+
+function getStoredLanguage(): Language | null {
+  try {
+    const v = localStorage.getItem(LANGUAGE_STORAGE_KEY);
+    return v === 'ar' || v === 'en' ? v : null;
+  } catch {
+    return null;
+  }
+}
+
+function setStoredLanguage(value: Language): void {
+  try {
+    localStorage.setItem(LANGUAGE_STORAGE_KEY, value);
+  } catch {
+    /* ignore quota / privacy-mode errors */
+  }
+}
+
+// Synchronous, no-network fallback: browsers in Arab countries almost always
+// report an `ar-*` locale. Used as the initial paint value and as the last
+// resort when the IP lookup fails.
+function languageFromNavigator(): Language {
+  const candidates =
+    navigator.languages && navigator.languages.length > 0
+      ? navigator.languages
+      : [navigator.language || ''];
+  return candidates.some((l) => typeof l === 'string' && l.toLowerCase().startsWith('ar'))
+    ? 'ar'
+    : 'en';
+}
+
+// IP-based country lookup. Two free HTTPS endpoints, tried in order, each with
+// a short race-style timeout so a slow source doesn't starve the fallback.
+// Both APIs return CORS-friendly JSON with no key required.
+async function languageFromIp(signal: AbortSignal): Promise<Language | null> {
+  const sources: { url: string; pick: (d: any) => string | undefined }[] = [
+    { url: 'https://ipapi.co/json/', pick: (d) => d?.country_code || d?.country },
+    { url: 'https://ipwho.is/', pick: (d) => (d?.success ? d?.country_code : undefined) },
+  ];
+  const withTimeout = <T,>(p: Promise<T>, ms: number): Promise<T | null> =>
+    Promise.race([
+      p,
+      new Promise<null>((r) => setTimeout(() => r(null), ms)),
+    ]);
+
+  for (const src of sources) {
+    if (signal.aborted) return null;
+    try {
+      const res = await withTimeout(
+        fetch(src.url, { signal, headers: { Accept: 'application/json' } }),
+        2000,
+      );
+      if (!res || !res.ok) continue;
+      const data = await withTimeout(res.json(), 1000);
+      if (!data) continue;
+      const cc = String(src.pick(data) || '').toUpperCase();
+      if (!cc) continue;
+      return ARAB_COUNTRY_CODES.has(cc) ? 'ar' : 'en';
+    } catch {
+      // aborted or network error — try the next source
+    }
+  }
+  return null;
+}
 
 // Page titles per route, localized. Applied whenever route or language changes.
 function pageTitle(pathname: string, language: Language): string {
@@ -37,6 +116,11 @@ function pageTitle(pathname: string, language: Language): string {
     return ar
       ? 'منتجات العناية بالفم | مركز كريستال للأسنان'
       : 'Oral Care Products | Crystal Dental Center';
+  }
+  if (pathname === '/contact') {
+    return ar
+      ? 'تواصل معنا | مركز كريستال للأسنان'
+      : 'Contact Us | Crystal Dental Center';
   }
   if (pathname.startsWith('/book')) {
     return ar
@@ -93,7 +177,9 @@ function Layout({
 }
 
 export default function App() {
-  const [language, setLanguage] = useState<Language>('en');
+  const [language, setLanguage] = useState<Language>(
+    () => getStoredLanguage() ?? languageFromNavigator(),
+  );
 
   // RTL / LTR + lang attribute drive the whole typographic system
   useEffect(() => {
@@ -101,10 +187,33 @@ export default function App() {
     document.documentElement.lang = language;
   }, [language]);
 
-  const toggleLanguage = useCallback(
-    () => setLanguage((prev) => (prev === 'en' ? 'ar' : 'en')),
-    [],
-  );
+  // One-shot IP-based refinement on first visit. Once the user has toggled the
+  // language manually (see toggleLanguage), we never re-detect: their explicit
+  // choice is stored in localStorage and wins forever.
+  useEffect(() => {
+    if (getStoredLanguage()) return;
+    const ac = new AbortController();
+    const timeout = setTimeout(() => ac.abort(), 4000);
+    languageFromIp(ac.signal).then((detected) => {
+      clearTimeout(timeout);
+      if (ac.signal.aborted || !detected) return;
+      // Only switch if IP says something different from what navigator suggested.
+      setLanguage((prev) => (prev === detected ? prev : detected));
+    });
+    return () => {
+      clearTimeout(timeout);
+      ac.abort();
+    };
+  }, []);
+
+  const toggleLanguage = useCallback(() => {
+    setLanguage((prev) => {
+      const next: Language = prev === 'en' ? 'ar' : 'en';
+      // Explicit user choice — persist so detection never overrules it.
+      setStoredLanguage(next);
+      return next;
+    });
+  }, []);
 
   return (
     <BrowserRouter>
@@ -120,6 +229,7 @@ export default function App() {
           <Route path="/" element={<HomePage language={language} />} />
           <Route path="/gallery" element={<GalleryPage language={language} />} />
           <Route path="/products" element={<ProductsPage language={language} />} />
+          <Route path="/contact" element={<ContactPage language={language} />} />
           <Route path="/book/:productId" element={<ConfirmBookingPage language={language} />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>

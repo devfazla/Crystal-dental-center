@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { MapPin, ExternalLink, RefreshCw } from 'lucide-react';
 import { Language } from '../types';
 import { CLINIC_INFO } from '../data/content';
@@ -6,6 +6,13 @@ import { CLINIC_INFO } from '../data/content';
 // Keyless Google Maps embed (no API key required) pinned to the clinic address.
 export const MAP_EMBED_SRC =
   'https://www.google.com/maps?q=Crystal%20Tower%2C%20Ahmed%20Al-Jaber%20Street%2C%20Sharq%2C%20Kuwait&z=16&output=embed';
+
+// Silent auto-retry budget before the user ever sees an error card. "A failed
+// map" is bad UX — most transient hiccups resolve within a couple of tries, so
+// we spend them quietly and only surface the fallback when the map is truly
+// unreachable.
+const MAX_ATTEMPTS = 4;
+const ATTEMPT_TIMEOUT_MS = 6000;
 
 interface MapWidgetProps {
   language: Language;
@@ -18,9 +25,13 @@ interface MapWidgetProps {
 
 /**
  * Google Maps embed with graceful degradation:
- * - shows a loading placeholder until the frame reports load,
- * - if the embed is blocked/offline (never loads, or errors), swaps to an
- *   always-usable fallback card with the address and a "Open in Google Maps" link.
+ * - waits until the widget is near the viewport (so a lazy iframe below the
+ *   fold doesn't have its timeout start before the browser begins loading it),
+ * - auto-retries the embed up to MAX_ATTEMPTS times, staying on the loading
+ *   indicator the whole time so users never see a transient failure,
+ * - only after all attempts fail does it swap to the fallback card with the
+ *   address, an "Open in Google Maps" link, and a manual Retry button that
+ *   resets the counter for another full cycle.
  */
 export const MapWidget: React.FC<MapWidgetProps> = ({
   language,
@@ -29,32 +40,68 @@ export const MapWidget: React.FC<MapWidgetProps> = ({
   id,
 }) => {
   const isArabic = language === 'ar';
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
+  const loadedRef = useRef(false);
+  const attemptsRef = useRef(1);
+
   const [state, setState] = useState<'loading' | 'ready' | 'error'>('loading');
   const [reloadKey, setReloadKey] = useState(0);
-  const loadedRef = useRef(false);
+  const [visible, setVisible] = useState(false);
 
-  // Re-arm the timeout whenever we (re)enter the loading state so a retry that
-  // fails again still falls back to the error card.
+  // Realtime visibility checker: gate auto-retries on the widget being on (or
+  // near) screen so we don't waste the attempt budget on a hidden map.
   useEffect(() => {
-    if (state !== 'loading') return;
-    const timer = setTimeout(() => {
-      if (!loadedRef.current) setState((s) => (s === 'loading' ? 'error' : s));
-    }, 8000);
-    return () => clearTimeout(timer);
-  }, [state, reloadKey]);
+    const el = wrapperRef.current;
+    if (!el || typeof IntersectionObserver === 'undefined') {
+      setVisible(true);
+      return;
+    }
+    const obs = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) setVisible(true);
+      },
+      // Preload when the widget is within 200px of the viewport.
+      { rootMargin: '200px 0px' },
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
 
-  const retry = () => {
+  // Called when a single attempt fails (timeout or iframe onError).
+  // Silently remounts a fresh iframe (bumping reloadKey + cache-buster) until
+  // we exhaust MAX_ATTEMPTS; then flips to the visible error card.
+  const failAttempt = useCallback(() => {
+    if (loadedRef.current) return; // already succeeded, ignore spurious errors
+    if (attemptsRef.current < MAX_ATTEMPTS) {
+      attemptsRef.current += 1;
+      setReloadKey((k) => k + 1);
+    } else {
+      setState('error');
+    }
+  }, []);
+
+  // Re-arm the timeout whenever we (re)enter loading after a retry.
+  useEffect(() => {
+    if (!visible || state !== 'loading') return;
+    const timer = setTimeout(failAttempt, ATTEMPT_TIMEOUT_MS);
+    return () => clearTimeout(timer);
+  }, [visible, state, reloadKey, failAttempt]);
+
+  // Manual retry resets the attempt counter so the user gets another full cycle.
+  const manualRetry = () => {
     loadedRef.current = false;
-    setReloadKey((k) => k + 1);
+    attemptsRef.current = 1;
     setState('loading');
+    setReloadKey((k) => k + 1);
   };
 
-  // Cache-buster so a retry forces a fresh network request for the embed.
+  // Cache-buster so each retry forces a fresh network request for the embed.
   const embedSrc = `${MAP_EMBED_SRC}&_r=${reloadKey}`;
 
   return (
     <div
       id={id}
+      ref={wrapperRef}
       className={`relative overflow-hidden bg-slate-100 ${roundedClassName} ${className}`}
     >
       {state !== 'error' && (
@@ -72,7 +119,7 @@ export const MapWidget: React.FC<MapWidgetProps> = ({
             loadedRef.current = true;
             setState('ready');
           }}
-          onError={() => setState('error')}
+          onError={failAttempt}
         />
       )}
 
@@ -109,7 +156,7 @@ export const MapWidget: React.FC<MapWidgetProps> = ({
           <button
             id={id ? `${id}-retry` : 'map-retry'}
             type="button"
-            onClick={retry}
+            onClick={manualRetry}
             className="inline-flex items-center gap-1.5 rounded-full border border-slate-300 bg-white px-4 py-2 text-xs font-semibold text-slate-700 transition-colors hover:border-[#004d5a] hover:text-[#004d5a] cursor-pointer"
           >
             <RefreshCw className="h-3.5 w-3.5" />

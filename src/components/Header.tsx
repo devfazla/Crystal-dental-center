@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Menu, X, Sparkles, Stethoscope, Image as ImageIcon, Star, MapPin, Phone, ArrowRight, ShoppingBag } from 'lucide-react';
+import { Menu, X, Sparkles, Stethoscope, Image as ImageIcon, Star, MapPin, Phone, ArrowRight, ShoppingBag, MessageCircle } from 'lucide-react';
 import { Language } from '../types';
 import { CLINIC_INFO } from '../data/content';
 import { useSectionNav } from '../hooks/useSectionNav';
@@ -22,11 +22,14 @@ export const Header: React.FC<HeaderProps> = ({
   const scrollToSection = useSectionNav();
   const onGallery = location.pathname === '/gallery';
   const onProducts = location.pathname === '/products';
+  const onContact = location.pathname === '/contact';
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
+      setIsScrolled(window.scrollY > 40);
       const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
       if (scrollHeight > 0) {
         const progress = (window.scrollY / scrollHeight) * 100;
@@ -39,6 +42,19 @@ export const Header: React.FC<HeaderProps> = ({
 
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  // Over the home hero, the header sits transparent so the video bleeds to the
+  // top of the page. Once scrolled, or on any other route, it uses its normal
+  // solid background. The mobile panel opening also forces the solid state.
+  const isHome = location.pathname === '/';
+  const transparent = isHome && !isScrolled && !mobileMenuOpen;
+
+  const logoTitleClass = transparent ? 'text-white' : 'text-on-surface';
+  const logoSubClass = transparent ? 'text-white/70' : 'text-on-surface-variant';
+  const navIdleClass = transparent
+    ? 'text-white/80 hover:text-white'
+    : 'text-on-surface-variant hover:text-on-surface';
+  const navActiveClass = transparent ? 'text-white font-bold' : 'text-on-surface font-bold';
 
   const handleNavClick = (sectionId: string) => {
     setMobileMenuOpen(false);
@@ -55,6 +71,11 @@ export const Header: React.FC<HeaderProps> = ({
     navigate('/products');
   };
 
+  const handleContactClick = () => {
+    setMobileMenuOpen(false);
+    navigate('/contact');
+  };
+
   const handleBookClick = () => {
     setMobileMenuOpen(false);
     scrollToSection('booking');
@@ -63,7 +84,11 @@ export const Header: React.FC<HeaderProps> = ({
   return (
     <header
       id="main-header"
-      className="fixed top-0 inset-x-0 z-50 bg-surface/92 backdrop-blur-xl border-b border-surface-container transition-all"
+      className={`fixed top-0 inset-x-0 z-50 transition-all ${
+        transparent
+          ? 'bg-transparent'
+          : 'bg-surface/92 backdrop-blur-xl border-b border-surface-container'
+      }`}
     >
       <div className="h-20 max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-12 flex items-center justify-between gap-3 sm:gap-6 lg:gap-8">
         {/* Brand Logo */}
@@ -84,10 +109,10 @@ export const Header: React.FC<HeaderProps> = ({
             referrerPolicy="no-referrer"
           />
           <div className="flex flex-col tracking-widest">
-            <span className="font-headline-md text-[18px] min-[360px]:text-[20px] sm:text-[22px] tracking-[0.2em] text-on-surface uppercase group-hover:text-secondary transition-colors font-medium leading-tight">
+            <span className={`font-headline-md text-[18px] min-[360px]:text-[20px] sm:text-[22px] tracking-[0.2em] ${logoTitleClass} uppercase group-hover:text-secondary transition-colors font-medium leading-tight`}>
               CRYSTAL
             </span>
-            <span className="font-label-sm text-[9px] sm:text-[10px] text-on-surface-variant uppercase tracking-[0.3em] -mt-0.5">
+            <span className={`font-label-sm text-[9px] sm:text-[10px] ${logoSubClass} uppercase tracking-[0.3em] -mt-0.5`}>
               {isArabic ? 'مركز الأسنان' : 'Dental Center'}
             </span>
           </div>
@@ -98,7 +123,7 @@ export const Header: React.FC<HeaderProps> = ({
           <button
             type="button"
             onClick={() => handleNavClick('disciplines')}
-            className="nav-link text-on-surface-variant hover:text-on-surface font-label-caps text-xs xl:text-label-caps uppercase tracking-wider xl:tracking-widest transition-colors cursor-pointer py-1 whitespace-nowrap"
+            className={`nav-link ${navIdleClass} font-label-caps text-xs xl:text-label-caps uppercase tracking-wider xl:tracking-widest transition-colors cursor-pointer py-1 whitespace-nowrap`}
             data-path="disciplines"
             id="nav-disciplines"
           >
@@ -107,7 +132,7 @@ export const Header: React.FC<HeaderProps> = ({
           <button
             type="button"
             onClick={() => handleNavClick('experience')}
-            className="nav-link text-on-surface-variant hover:text-on-surface font-label-caps text-xs xl:text-label-caps uppercase tracking-wider xl:tracking-widest transition-colors cursor-pointer py-1 whitespace-nowrap"
+            className={`nav-link ${navIdleClass} font-label-caps text-xs xl:text-label-caps uppercase tracking-wider xl:tracking-widest transition-colors cursor-pointer py-1 whitespace-nowrap`}
             data-path="sanctuary"
             id="nav-sanctuary"
           >
@@ -117,9 +142,7 @@ export const Header: React.FC<HeaderProps> = ({
             type="button"
             onClick={handleGalleryClick}
             className={`nav-link font-label-caps text-xs xl:text-label-caps uppercase tracking-wider xl:tracking-widest transition-colors cursor-pointer py-1 whitespace-nowrap ${
-              onGallery
-                ? 'nav-link-active text-on-surface font-bold'
-                : 'text-on-surface-variant hover:text-on-surface'
+              onGallery ? `nav-link-active ${navActiveClass}` : navIdleClass
             }`}
             data-path="gallery"
             id="nav-gallery"
@@ -130,9 +153,7 @@ export const Header: React.FC<HeaderProps> = ({
             type="button"
             onClick={handleProductsClick}
             className={`nav-link font-label-caps text-xs xl:text-label-caps uppercase tracking-wider xl:tracking-widest transition-colors cursor-pointer py-1 whitespace-nowrap ${
-              onProducts
-                ? 'nav-link-active text-on-surface font-bold'
-                : 'text-on-surface-variant hover:text-on-surface'
+              onProducts ? `nav-link-active ${navActiveClass}` : navIdleClass
             }`}
             data-path="products"
             id="nav-products"
@@ -141,8 +162,19 @@ export const Header: React.FC<HeaderProps> = ({
           </button>
           <button
             type="button"
+            onClick={handleContactClick}
+            className={`nav-link font-label-caps text-xs xl:text-label-caps uppercase tracking-wider xl:tracking-widest transition-colors cursor-pointer py-1 whitespace-nowrap ${
+              onContact ? `nav-link-active ${navActiveClass}` : navIdleClass
+            }`}
+            data-path="contact"
+            id="nav-contact"
+          >
+            {isArabic ? 'تواصل معنا' : 'Contact'}
+          </button>
+          <button
+            type="button"
             onClick={() => handleNavClick('reviews')}
-            className="nav-link text-on-surface-variant hover:text-on-surface font-label-caps text-xs xl:text-label-caps uppercase tracking-wider xl:tracking-widest transition-colors cursor-pointer py-1 whitespace-nowrap"
+            className={`nav-link ${navIdleClass} font-label-caps text-xs xl:text-label-caps uppercase tracking-wider xl:tracking-widest transition-colors cursor-pointer py-1 whitespace-nowrap`}
             data-path="reviews"
             id="nav-reviews"
           >
@@ -153,28 +185,34 @@ export const Header: React.FC<HeaderProps> = ({
         {/* Right Actions: Language Switcher, CTA Button, Mobile/Tablet Menu Button */}
         <div className="flex items-center gap-2 sm:gap-4 lg:gap-6">
           {/* Language Switcher */}
-          <div className="flex items-center font-label-sm text-xs text-on-surface-variant bg-surface-container-low/80 sm:bg-surface-container-low/40 rounded-full px-1.5 py-0.5">
+          <div className={`flex items-center font-label-sm text-xs rounded-full px-1.5 py-0.5 ${
+            transparent ? 'text-white/80 bg-white/10' : 'text-on-surface-variant bg-surface-container-low/80 sm:bg-surface-container-low/40'
+          }`}>
             <button
               id="lang-btn-en"
               type="button"
               onClick={() => language !== 'en' && onToggleLanguage()}
               className={`transition-colors font-medium min-h-[36px] min-w-[36px] flex items-center justify-center px-2 py-1 rounded-md text-xs ${
                 language === 'en'
-                  ? 'text-on-surface font-bold underline underline-offset-4 decoration-secondary'
-                  : 'hover:text-on-surface text-on-surface-variant'
+                  ? `${transparent ? 'text-white' : 'text-on-surface'} font-bold underline underline-offset-4 decoration-secondary`
+                  : transparent
+                    ? 'text-white/60 hover:text-white'
+                    : 'hover:text-on-surface text-on-surface-variant'
               }`}
             >
               EN
             </button>
-            <span className="mx-0.5 text-outline-variant select-none">/</span>
+            <span className={`mx-0.5 select-none ${transparent ? 'text-white/40' : 'text-outline-variant'}`}>/</span>
             <button
               id="lang-btn-ar"
               type="button"
               onClick={() => language !== 'ar' && onToggleLanguage()}
               className={`transition-colors font-medium min-h-[36px] min-w-[36px] flex items-center justify-center px-2 py-1 rounded-md text-xs ${
                 language === 'ar'
-                  ? 'text-on-surface font-bold underline underline-offset-4 decoration-secondary'
-                  : 'hover:text-on-surface text-on-surface-variant'
+                  ? `${transparent ? 'text-white' : 'text-on-surface'} font-bold underline underline-offset-4 decoration-secondary`
+                  : transparent
+                    ? 'text-white/60 hover:text-white'
+                    : 'hover:text-on-surface text-on-surface-variant'
               }`}
             >
               عربي
@@ -197,11 +235,28 @@ export const Header: React.FC<HeaderProps> = ({
             id="btn-mobile-nav-toggle"
             type="button"
             onClick={() => setMobileMenuOpen((prev) => !prev)}
-            className="lg:hidden min-w-[44px] min-h-[44px] flex items-center justify-center text-on-surface hover:text-secondary rounded-xl hover:bg-surface-container-high/60 transition-colors cursor-pointer border border-outline-variant/30"
-            aria-label="Toggle Navigation Menu"
+            className={`lg:hidden min-h-[44px] flex items-center justify-center gap-1.5 transition-colors cursor-pointer border ${
+              mobileMenuOpen
+                ? 'px-4 rounded-full bg-[#004d5a] text-white border-transparent hover:bg-[#003842]'
+                : `min-w-[44px] rounded-xl ${
+                    transparent
+                      ? 'text-white border-white/40 hover:bg-white/10'
+                      : 'text-on-surface hover:text-secondary hover:bg-surface-container-high/60 border-outline-variant/30'
+                  }`
+            }`}
+            aria-label={mobileMenuOpen ? (isArabic ? 'إغلاق القائمة' : 'Close menu') : (isArabic ? 'فتح القائمة' : 'Open menu')}
             aria-expanded={mobileMenuOpen}
           >
-            {mobileMenuOpen ? <X className="w-5 h-5 sm:w-6 sm:h-6" /> : <Menu className="w-5 h-5 sm:w-6 sm:h-6" />}
+            {mobileMenuOpen ? (
+              <>
+                <X className="w-5 h-5" />
+                <span className="text-xs font-semibold uppercase tracking-wider">
+                  {isArabic ? 'إغلاق' : 'Close'}
+                </span>
+              </>
+            ) : (
+              <Menu className="w-5 h-5 sm:w-6 sm:h-6" />
+            )}
           </button>
         </div>
       </div>
@@ -293,6 +348,25 @@ export const Header: React.FC<HeaderProps> = ({
 
               <button
                 type="button"
+                onClick={handleContactClick}
+                className="p-3.5 sm:p-4 rounded-xl border border-outline-variant/30 hover:border-secondary/60 bg-surface-container-lowest hover:bg-surface-container-low transition-all text-start group flex items-center gap-3.5 cursor-pointer min-h-[52px] active:scale-[0.99]"
+                id="mobile-nav-contact"
+              >
+                <span className="w-10 h-10 rounded-lg bg-secondary/10 group-hover:bg-secondary text-secondary group-hover:text-white flex items-center justify-center transition-colors shrink-0">
+                  <MessageCircle className="w-5 h-5" />
+                </span>
+                <div className="flex flex-col">
+                  <span className="text-sm font-semibold uppercase tracking-wider text-on-surface group-hover:text-secondary transition-colors">
+                    {isArabic ? 'تواصل معنا' : 'Contact'}
+                  </span>
+                  <span className="text-xs text-on-surface-variant font-normal">
+                    {isArabic ? 'هاتف، واتساب، بريد وموقع العيادة' : 'Call, WhatsApp, Email & Location'}
+                  </span>
+                </div>
+              </button>
+
+              <button
+                type="button"
                 onClick={() => handleNavClick('reviews')}
                 className="p-3.5 sm:p-4 rounded-xl border border-outline-variant/30 hover:border-secondary/60 bg-surface-container-lowest hover:bg-surface-container-low transition-all text-start group flex items-center gap-3.5 cursor-pointer min-h-[52px] active:scale-[0.99]"
                 id="mobile-nav-reviews"
@@ -344,7 +418,9 @@ export const Header: React.FC<HeaderProps> = ({
       {/* Reading / Scroll Progress Bar below the navBar */}
       <div
         id="nav-scroll-progress-track"
-        className="absolute bottom-0 inset-x-0 h-[2.5px] bg-outline-variant/20 overflow-hidden"
+        className={`absolute bottom-0 inset-x-0 h-[2.5px] bg-outline-variant/20 overflow-hidden transition-opacity ${
+          transparent ? 'opacity-0' : 'opacity-100'
+        }`}
         role="progressbar"
         aria-valuenow={Math.round(scrollProgress)}
         aria-valuemin={0}

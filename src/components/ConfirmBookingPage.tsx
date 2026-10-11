@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { ArrowLeft, CheckCircle2, CalendarClock, ShoppingBag } from 'lucide-react';
 import { Language } from '../types';
-import { PRODUCTS, CLINIC_INFO } from '../data/content';
+import { getBookableItem, CLINIC_INFO } from '../data/content';
 import { SafeImage } from './SafeImage';
 
 interface ConfirmBookingPageProps {
@@ -17,14 +17,28 @@ const WhatsAppIcon: React.FC<{ className?: string }> = ({ className = 'w-4 h-4' 
   </svg>
 );
 
-// Checkout-style confirmation page reached from a product's "Book Now".
-// Shows the product details plus name / phone / preferred timing, and offers
-// two ways to confirm: a demo submit or a prefilled WhatsApp message.
+// Checkout-style confirmation page reached from a product's "Book Now" or a
+// service's "Reserve Consultation". Shows the item details plus name / phone /
+// preferred timing, and offers two ways to confirm: a demo submit or a
+// prefilled WhatsApp message.
 export const ConfirmBookingPage: React.FC<ConfirmBookingPageProps> = ({ language }) => {
   const isArabic = language === 'ar';
   const navigate = useNavigate();
+  const location = useLocation();
   const { productId } = useParams<{ productId: string }>();
-  const product = PRODUCTS.find((p) => p.id === productId) ?? null;
+  const product = getBookableItem(productId);
+
+  // Return target: products grid when arriving from /products, otherwise the
+  // home page (services are booked from the "Our Dental Services." section).
+  const backTo = (location.state as { from?: string } | null)?.from ?? '/products';
+  const backLabel =
+    backTo === '/products'
+      ? isArabic
+        ? 'العودة للمتجر'
+        : 'Back to Products'
+      : isArabic
+        ? 'العودة للرئيسية'
+        : 'Return to Home';
 
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
@@ -47,11 +61,11 @@ export const ConfirmBookingPage: React.FC<ConfirmBookingPageProps> = ({ language
           <button
             id="confirm-booking-back-btn"
             type="button"
-            onClick={() => navigate('/products')}
+            onClick={() => navigate(backTo)}
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#004d5a] text-white text-sm font-medium hover:bg-[#003842] transition-colors cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4 rtl:rotate-180" />
-            {isArabic ? 'العودة للمتجر' : 'Back to Products'}
+            {backLabel}
           </button>
         </div>
       </div>
@@ -93,11 +107,11 @@ export const ConfirmBookingPage: React.FC<ConfirmBookingPageProps> = ({ language
           <button
             id="confirm-booking-return-btn"
             type="button"
-            onClick={() => navigate('/products')}
+            onClick={() => navigate(backTo)}
             className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-on-surface hover:text-secondary font-medium transition-colors cursor-pointer group"
           >
             <ArrowLeft className="w-4 h-4 rtl:rotate-180 group-hover:-translate-x-1 rtl:group-hover:translate-x-1 transition-transform" />
-            <span>{isArabic ? 'العودة للمتجر' : 'Back to Products'}</span>
+            <span>{backLabel}</span>
           </button>
 
           <span className="text-xs uppercase tracking-widest text-on-surface-variant font-medium">
@@ -182,10 +196,10 @@ export const ConfirmBookingPage: React.FC<ConfirmBookingPageProps> = ({ language
                   <button
                     id="confirm-booking-products-btn"
                     type="button"
-                    onClick={() => navigate('/products')}
+                    onClick={() => navigate(backTo)}
                     className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[#004d5a] text-white text-sm font-medium hover:bg-[#003842] transition-colors cursor-pointer"
                   >
-                    {isArabic ? 'العودة للمتجر' : 'Back to Products'}
+                    {backLabel}
                   </button>
                 </div>
               </motion.div>

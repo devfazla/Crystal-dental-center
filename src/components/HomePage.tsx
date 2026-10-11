@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
 import { HeroSection } from './HeroSection';
 import { IntroSection } from './IntroSection';
@@ -22,13 +22,13 @@ interface HomePageProps {
 
 export const HomePage: React.FC<HomePageProps> = ({ language }) => {
   const location = useLocation();
+  const navigate = useNavigate();
   const scrollToSection = useSectionNav();
 
   const [selectedDiscipline, setSelectedDiscipline] = useState<Discipline>(DISCIPLINES[0]);
   const [modalDiscipline, setModalDiscipline] = useState<Discipline | null>(null);
-  const [bookingDisciplineName, setBookingDisciplineName] = useState<string>(
-    DISCIPLINES[0].titleEn,
-  );
+  // Default treatment preselected in the on-page booking form.
+  const bookingDisciplineName = DISCIPLINES[0].titleEn;
 
   // Cross-page section landing: Header/Footer route here with location.state.scrollTo.
   // Applied once the sections are mounted, then the state is cleared so a refresh
@@ -53,9 +53,10 @@ export const HomePage: React.FC<HomePageProps> = ({ language }) => {
   }, [pendingSection]);
 
   const handleBookFromDiscipline = (disc: Discipline) => {
-    setBookingDisciplineName(disc.titleEn);
     setModalDiscipline(null);
-    scrollToSection('booking');
+    // Same checkout/confirm-booking flow the product "Book Now" uses. Passing
+    // from: '/' so the confirm page returns to the home services section.
+    navigate(`/book/${disc.id}`, { state: { from: '/' } });
   };
 
   return (
@@ -63,7 +64,7 @@ export const HomePage: React.FC<HomePageProps> = ({ language }) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className="w-full pt-20 bg-surface"
+      className="w-full bg-surface"
     >
       {/* Section 1: Hero / The Statement */}
       <HeroSection language={language} />

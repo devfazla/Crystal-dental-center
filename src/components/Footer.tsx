@@ -45,11 +45,13 @@ export const Footer: React.FC<FooterProps> = ({ language }) => {
     to?: string;
     section?: string;
   }[] = [
+    { id: 'home', labelEn: 'Home', labelAr: 'الرئيسية', to: '/' },
     { id: 'disciplines', labelEn: 'Services', labelAr: 'الخدمات', section: 'disciplines' },
     { id: 'about', labelEn: 'About Clinic', labelAr: 'عن العيادة', section: 'experience' },
     { id: 'gallery', labelEn: 'Gallery', labelAr: 'الصور', to: '/gallery' },
     { id: 'products', labelEn: 'Products', labelAr: 'المتجر', to: '/products' },
     { id: 'reviews', labelEn: 'Reviews', labelAr: 'الآراء', section: 'reviews' },
+    { id: 'contact', labelEn: 'Contact', labelAr: 'تواصل معنا', to: '/contact' },
     { id: 'links', labelEn: 'All Links', labelAr: 'كل الروابط', to: '/links' },
     { id: 'booking', labelEn: 'Book Appointment', labelAr: 'حجز موعد', section: 'booking' },
   ];
@@ -114,7 +116,7 @@ export const Footer: React.FC<FooterProps> = ({ language }) => {
                 <span className="text-xs font-semibold uppercase tracking-[0.18em] text-white/45">
                   {isArabic ? 'روابط سريعة' : 'Quick Links'}
                 </span>
-                <ul className="mt-4 space-y-2.5 text-sm">
+                <ul className="mt-4 grid grid-cols-2 gap-x-6 gap-y-2.5 text-sm">
                   {navLinks.map((link) => (
                     <li key={link.id}>
                       <a

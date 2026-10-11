@@ -97,24 +97,9 @@ export const BookingSection: React.FC<BookingSectionProps> = ({
         {/* Left: brand + direct contact */}
         <div className="md:col-span-5 bg-gradient-to-b from-[#004d5a] to-[#013742] p-7 sm:p-9 lg:p-10 flex flex-col justify-between text-white">
           <div>
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-light tracking-tight mb-2">
-              {isArabic ? (
-                <>
-                  زيارة <span className="italic font-semibold text-secondary-fixed">كريستال</span>
-                </>
-              ) : (
-                <>
-                  Visit <span className="italic font-semibold text-secondary-fixed">Crystal</span>
-                </>
-              )}
+            <h2 className="text-xl sm:text-2xl font-light tracking-tight mb-6">
+              {isArabic ? 'تواصل معنا' : 'Reach us directly'}
             </h2>
-
-            <p className="flex items-center gap-2 text-white/70 text-sm leading-relaxed mb-8">
-              <MapPin className="w-4 h-4 shrink-0" />
-              {isArabic
-                ? 'برج كريستال · الدور الثامن · الشرق، الكويت'
-                : 'Crystal Tower · 8th Floor · Sharq, Kuwait'}
-            </p>
 
             <div className="flex flex-col gap-3">
               <a
@@ -321,6 +306,39 @@ export const BookingSection: React.FC<BookingSectionProps> = ({
             </>
           )}
         </div>
+      </motion.div>
+
+      {/* Separate "Visit us" card below the booking card, with a maps link */}
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: '-100px' }}
+        transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+        className="w-full max-w-4xl mx-auto mt-6 sm:mt-8 rounded-3xl shadow-sm bg-white border border-outline-variant/30 p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5"
+      >
+        <div className="flex items-start gap-4">
+          <span className="w-11 h-11 rounded-full bg-[#004d5a]/10 text-[#004d5a] flex items-center justify-center shrink-0">
+            <MapPin className="w-5 h-5" />
+          </span>
+          <div className="flex flex-col">
+            <h3 className="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">
+              {isArabic ? 'زورونا' : 'Visit us'}
+            </h3>
+            <p className="mt-1 text-sm text-slate-500 leading-relaxed">
+              {isArabic ? CLINIC_INFO.addressAr : CLINIC_INFO.address}
+            </p>
+          </div>
+        </div>
+        <a
+          id="booking-maps-btn"
+          href={CLINIC_INFO.googleMaps}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex w-full sm:w-auto items-center justify-center gap-2 px-5 py-3 rounded-xl bg-[#004d5a] text-white text-sm font-medium hover:bg-[#003842] transition-colors shrink-0 min-h-[48px]"
+        >
+          <MapPin className="w-4 h-4" />
+          <span>{isArabic ? 'افتح في خرائط جوجل' : 'Open in Google Maps'}</span>
+        </a>
       </motion.div>
     </section>
   );
