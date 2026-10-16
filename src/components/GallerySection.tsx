@@ -57,11 +57,6 @@ export const GallerySection: React.FC<GallerySectionProps> = ({
             <>Clinic <span className="heading-accent">Gallery.</span></>
           )}
         </h2>
-        <p className="mt-3 text-slate-500 max-w-2xl text-center text-sm sm:text-base font-normal leading-relaxed">
-          {isArabic
-            ? 'مرّر المؤشر على الصورة لتقريبها.'
-            : 'Hover a photo to bring it closer.'}
-        </p>
       </motion.div>
 
       {/* Mosaic: fills remaining vertical space; row heights are fixed so the

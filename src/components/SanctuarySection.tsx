@@ -125,11 +125,6 @@ export const SanctuarySection: React.FC<SanctuarySectionProps> = ({
               <>Our <span className="heading-accent">Clinic.</span></>
             )}
           </h2>
-          <p className="mt-3 sm:mt-4 text-slate-600 text-sm sm:text-base lg:text-lg font-normal max-w-2xl text-center leading-relaxed">
-            {isArabic
-              ? 'في الدور الثامن من برج كريستال بالشرق؛ مهيأة للهدوء والضوء والخصوصية.'
-              : 'On the 8th floor of Crystal Tower in Sharq, laid out around quiet, light and privacy.'}
-          </p>
         </motion.div>
       </div>
 
