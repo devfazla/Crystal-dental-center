@@ -144,7 +144,7 @@ export const Footer: React.FC<FooterProps> = ({ language }) => {
                     <li key={link.id}>
                       <a
                         id={`footer-nav-${link.id}`}
-                        href={link.to ? `#${link.to}` : '#/'}
+                        href={link.to ? link.to : '#'}
                         onClick={(e) => {
                           e.preventDefault();
                           if (link.to) navigate(link.to);
@@ -152,7 +152,7 @@ export const Footer: React.FC<FooterProps> = ({ language }) => {
                         }}
                         className="group inline-flex items-center gap-2.5 text-white/70 hover:text-white transition-colors"
                       >
-                        <span className="h-px w-4 bg-white/30 group-hover:w-6 group-hover:bg-secondary-fixed transition-all duration-300" />
+                        <span className="w-1.5 h-1.5 shrink-0 rounded-full bg-white/30 group-hover:bg-secondary-fixed group-hover:scale-125 transition-all duration-300" />
                         <span>{isArabic ? link.labelAr : link.labelEn}</span>
                       </a>
                     </li>
