@@ -94,9 +94,9 @@ export const GallerySection: React.FC<GallerySectionProps> = ({
               className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out brightness-[0.88] group-hover:brightness-100"
               loading="lazy"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/35 to-transparent pointer-events-none opacity-0 group-hover:opacity-100 group-focus:opacity-100 group-active:opacity-100 transition-opacity duration-500" />
 
-            <div className="absolute bottom-6 sm:bottom-8 left-6 sm:left-8 rtl:left-auto rtl:right-6 sm:rtl:right-8 max-w-xl text-left rtl:text-right">
+            <div className="absolute bottom-6 sm:bottom-8 left-6 sm:left-8 rtl:left-auto rtl:right-6 sm:rtl:right-8 max-w-xl text-left rtl:text-right opacity-0 translate-y-3 group-hover:opacity-100 group-hover:translate-y-0 group-focus:opacity-100 group-focus:translate-y-0 group-active:opacity-100 group-active:translate-y-0 transition-all duration-500">
               <span className="text-[11px] sm:text-xs uppercase tracking-widest text-[#59d8e5] font-semibold mb-2 block">
                 {isArabic ? item0.categoryAr : item0.categoryEn}
               </span>
@@ -143,9 +143,9 @@ export const GallerySection: React.FC<GallerySectionProps> = ({
                   className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out brightness-[0.88] group-hover:brightness-100"
                   loading="lazy"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent pointer-events-none" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent pointer-events-none opacity-0 group-hover:opacity-100 group-focus:opacity-100 group-active:opacity-100 transition-opacity duration-500" />
 
-                <div className="absolute bottom-5 left-5 rtl:left-auto rtl:right-5 max-w-md text-left rtl:text-right">
+                <div className="absolute bottom-5 left-5 rtl:left-auto rtl:right-5 max-w-md text-left rtl:text-right opacity-0 translate-y-3 group-hover:opacity-100 group-hover:translate-y-0 group-focus:opacity-100 group-focus:translate-y-0 group-active:opacity-100 group-active:translate-y-0 transition-all duration-500">
                   <span className="text-[10px] sm:text-[11px] uppercase tracking-widest text-[#59d8e5] font-semibold mb-1 block">
                     {isArabic ? item.categoryAr : item.categoryEn}
                   </span>
@@ -189,9 +189,9 @@ export const GallerySection: React.FC<GallerySectionProps> = ({
                   className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out brightness-[0.88] group-hover:brightness-100"
                   loading="lazy"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent pointer-events-none" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent pointer-events-none opacity-0 group-hover:opacity-100 group-focus:opacity-100 group-active:opacity-100 transition-opacity duration-500" />
 
-                <div className="absolute bottom-5 left-5 rtl:left-auto rtl:right-5 max-w-md text-left rtl:text-right">
+                <div className="absolute bottom-5 left-5 rtl:left-auto rtl:right-5 max-w-md text-left rtl:text-right opacity-0 translate-y-3 group-hover:opacity-100 group-hover:translate-y-0 group-focus:opacity-100 group-focus:translate-y-0 group-active:opacity-100 group-active:translate-y-0 transition-all duration-500">
                   <span className="text-[10px] sm:text-[11px] uppercase tracking-widest text-[#59d8e5] font-semibold mb-1 block">
                     {isArabic ? item.categoryAr : item.categoryEn}
                   </span>
