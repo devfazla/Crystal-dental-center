@@ -22,8 +22,8 @@ export const CLINIC_INFO = {
   x: 'https://x.com/crystaldental',
   youtube: 'https://youtube.com/@crystaldentalcenter2239',
   linkedin: 'https://www.linkedin.com/company/crystal-dental-center',
-  googleMaps: 'https://maps.app.goo.gl/Y7LN29p4VBV2MEcG6',
-  review: 'https://maps.app.goo.gl/Y7LN29p4VBV2MEcG6?review=1',
+  googleMaps: 'https://maps.app.goo.gl/nRR8vKgnvHvbyAt27',
+  review: 'https://maps.app.goo.gl/nRR8vKgnvHvbyAt27?review=1',
 };
 
 export const IMAGES = {
