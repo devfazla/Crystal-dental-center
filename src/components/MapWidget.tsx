@@ -3,9 +3,11 @@ import { MapPin, ExternalLink, RefreshCw } from 'lucide-react';
 import { Language } from '../types';
 import { CLINIC_INFO } from '../data/content';
 
-// Keyless Google Maps embed (no API key required) pinned to the clinic address.
+// Keyless Google Maps embed (no API key required) pinned to the clinic's exact
+// place by CID (from its Google Maps listing), so the marker is always Crystal
+// Dental Center itself — never the surrounding tower.
 export const MAP_EMBED_SRC =
-  'https://www.google.com/maps?q=Crystal%20Tower%2C%20Ahmed%20Al-Jaber%20Street%2C%20Sharq%2C%20Kuwait&z=16&output=embed';
+  'https://www.google.com/maps?cid=6058424791045103257&output=embed&hl=en';
 
 // Silent auto-retry budget before the user ever sees an error card. "A failed
 // map" is bad UX — most transient hiccups resolve within a couple of tries, so
